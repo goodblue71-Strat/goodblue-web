@@ -1,30 +1,47 @@
-@import "tailwindcss";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ----------------------------- */
+/* 🌊 GoodBlue Global Styles     */
+/* ----------------------------- */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Typography */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply antialiased text-gray-900 bg-white leading-relaxed;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold text-goodblue-900;
+}
+
+/* Links */
+a {
+  @apply text-goodblue-700 hover:text-goodblue-600 transition-colors duration-200;
+}
+
+/* Buttons */
+button, .btn {
+  @apply inline-block rounded-xl px-5 py-2 font-semibold;
+}
+
+.btn-primary {
+  @apply bg-goodblue-700 text-white hover:bg-goodblue-600 shadow;
+}
+
+.btn-secondary {
+  @apply border border-gray-300 text-gray-800 hover:bg-gray-50;
+}
+
+/* Section padding utility (optional helper) */
+.section {
+  @apply py-16 sm:py-20;
+}
+
+/* Optional subtle gradient background for hero sections */
+.hero-gradient {
+  background: linear-gradient(to bottom right, #f8fbff, #ffffff);
 }
