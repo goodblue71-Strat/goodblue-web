@@ -5,7 +5,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen text-center space-y-6 p-8">
-    <h1 className="text-4xl font-bold text-blue-600">
+    <h1 className="text-4xl font-bold text-red-600">
         Strategy, generated—board-ready in minutes.
       </h1>
       <p className="text-lg text-gray-600 max-w-lg">
