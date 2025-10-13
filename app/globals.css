@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+/* Don’t let elements force the page wider */
+* { box-sizing: border-box; }
+img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
+table { width: 100%; border-collapse: collapse; }
+pre, code { white-space: pre-wrap; word-break: break-word; }
+a, p, li, h1, h2, h3, h4, h5, h6 { overflow-wrap: anywhere; }
+
+/* Utility for very wide widgets */
+.wide-scroll { max-width: 100%; overflow-x: auto; }
