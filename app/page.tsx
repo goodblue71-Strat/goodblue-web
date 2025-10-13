@@ -1,25 +1,53 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Section from "@/components/Section";
+import HowItWorks from "@/components/HowItWorks";
+import Frameworks from "@/components/Frameworks";
+import CTASection from "@/components/CTASection";
+import Footer from "@/components/Footer";
 
 export default function Home() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://goodblue-app-yourname.streamlit.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "#";
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen text-center space-y-6 p-8">
-    <h1 style={{ color: "green" }} className="text-5xl font-bold">
-  Strategy yes yes, generated—board-ready in minutes.
-   </h1>
-      <p className="text-lg text-gray-600 max-w-lg">
-        Pick a company and product. Get SWOT, benchmarks, and a PPT you can present today.
-      </p>
+    <>
+      <Navbar />
 
-      <a
-        href={appUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-      >
-        Try the App
-      </a>
-    </main>
+      {/* Hero */}
+      <Section className="pt-4">
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+          <div>
+            <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
+              Strategy, generated—board-ready in minutes.
+            </h1>
+            <p className="mt-4 text-lg text-gray-600">
+              Turn market inputs into insights and slides powered by AI and proven strategy frames.
+            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <a
+                href={appUrl}
+                target="_blank" rel="noopener noreferrer"
+                className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
+              >
+                Try the App
+              </a>
+              <a href="#sample" className="text-blue-700 font-medium hover:underline">
+                View Sample Deck
+              </a>
+            </div>
+          </div>
+
+          {/* simple placeholder illustration */}
+          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6 shadow-sm">
+            <div className="h-40 rounded-lg bg-white shadow-inner" />
+            <div className="mt-4 h-24 rounded-lg bg-white shadow-inner" />
+          </div>
+        </div>
+      </Section>
+
+      <HowItWorks />
+      <Frameworks />
+      <CTASection />
+      <Footer />
+    </>
   );
 }
