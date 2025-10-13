@@ -11,7 +11,13 @@ export default function Section({
 }) {
   return (
     <section id={id} className={`py-16 sm:py-20 ${className}`}>
-      <div className={`${narrow ? "max-w-3xl" : "max-w-6xl"} mx-auto`}>{children}</div>
+      <div
+        className={`${
+          narrow ? "max-w-3xl" : "max-w-6xl"
+        } mx-auto px-4 sm:px-6 lg:px-8`}
+      >
+        {children}
+      </div>
     </section>
   );
 }
