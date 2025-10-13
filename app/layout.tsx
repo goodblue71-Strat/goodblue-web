@@ -1,10 +1,16 @@
+import type { ReactNode, Metadata } from "react";
 import "./globals.css";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata: Metadata = {
+  title: "GoodBlue — Strategy, generated in minutes",
+  description: "Turn market inputs into board-ready insights and slides with AI.",
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900 antialiased font-sans">
-        {children}
+      <body className="bg-gray-50 text-gray-900 antialiased">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">{children}</div>
       </body>
     </html>
   );
