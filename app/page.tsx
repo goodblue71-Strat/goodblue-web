@@ -5,11 +5,9 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen text-center space-y-6 p-8">
-    <div className="text-red-600">
-      <h1 className="!text-red-600 text-5xl font-bold">
-        Strategy, generated—board-ready in minutes.
-      </h1>
-    </div>
+    <h1 style={{ color: "red" }} className="text-5xl font-bold">
+  Strategy yes yes, generated—board-ready in minutes.
+   </h1>
       <p className="text-lg text-gray-600 max-w-lg">
         Pick a company and product. Get SWOT, benchmarks, and a PPT you can present today.
       </p>
