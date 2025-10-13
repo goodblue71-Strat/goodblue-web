@@ -14,7 +14,7 @@ export default function Section({
       <div
         className={`${
           narrow ? "max-w-3xl" : "max-w-6xl"
-        } mx-auto px-4 sm:px-6 lg:px-8`}
+        } mx-auto w-full px-4 sm:px-6 lg:px-8 overflow-x-clip`}
       >
         {children}
       </div>
