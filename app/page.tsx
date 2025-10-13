@@ -5,9 +5,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen text-center space-y-6 p-8">
-    <h1 className="!text-red-600 text-5xl font-bold">
+    <div className="text-red-600">
+      <h1 className="!text-red-600 text-5xl font-bold">
         Strategy, generated—board-ready in minutes.
       </h1>
+    </div>
       <p className="text-lg text-gray-600 max-w-lg">
         Pick a company and product. Get SWOT, benchmarks, and a PPT you can present today.
       </p>
