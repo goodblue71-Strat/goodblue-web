@@ -57,7 +57,7 @@ export default function TermsPage() {
         <p className="text-gray-700">
           For questions about these Terms, contact us at{" "}
           <a
-            href="mailto:hello@gooblue.ai"
+            href="mailto:goodblue71@gmail.com"
             className="text-blue-600 hover:underline"
           >
             hello@gooblue.ai
