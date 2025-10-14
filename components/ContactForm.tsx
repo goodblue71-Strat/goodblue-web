@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ContactForm() {
-  const [status, setStatus] = useState<"idle"|"sending"|"sent"|"error">("idle");
+  const [status, setStatus] = useState<"idle"|"sending"|"error">("idle");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
     setError("");
+
     const form = e.currentTarget;
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
@@ -20,9 +23,12 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       if (!res.ok) throw new Error("Failed to send. Please try again.");
-      setStatus("sent");
-      form.reset();
+
+      // Optional: include the sender’s name in the query string
+      const name = (payload.name as string) || "";
+      router.push(`/contact/success${name ? `?name=${encodeURIComponent(name)}` : ""}`);
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
       setStatus("error");
@@ -31,6 +37,9 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-lg space-y-4">
+      {/* honeypot (optional anti-spam) */}
+      <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+
       <div>
         <label className="block text-sm font-medium">Name</label>
         <input
@@ -71,12 +80,7 @@ export default function ContactForm() {
         {status === "sending" ? "Sending…" : "Send message"}
       </button>
 
-      {status === "sent" && (
-        <p className="text-green-700">Thanks! We’ve received your message.</p>
-      )}
-      {status === "error" && (
-        <p className="text-red-600">{error}</p>
-      )}
+      {status === "error" && <p className="text-red-600">{error}</p>}
     </form>
   );
 }
