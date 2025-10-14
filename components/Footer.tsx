@@ -10,7 +10,11 @@ export default function Footer() {
             <a href="/contact" className="hover:text-gray-900">
               Contact
             </a>
-            <a href="#linkedin" className="hover:text-gray-900">
+            <a href="https://www.linkedin.com/in/kirthi-vani/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-900"
+            >
               LinkedIn
             </a>
             <a href="/Privacy" className="hover:text-gray-900">
