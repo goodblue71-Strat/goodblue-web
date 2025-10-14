@@ -3,7 +3,6 @@ import Section from "@/components/Section";
 import HowItWorks from "@/components/HowItWorks";
 import Frameworks from "@/components/Frameworks";
 import CTASection from "@/components/CTASection";
-//import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -46,7 +45,6 @@ export default function Home() {
       </Section>
 <Frameworks />
 <CTASection />
-//<ContactSection />
 <Footer />
 
       <HowItWorks />
