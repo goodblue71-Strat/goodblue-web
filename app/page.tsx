@@ -34,6 +34,9 @@ export default function Home() {
                 View Sample Deck
               </a>
             </div>
+            <p className="text-sm text-gray-500 mt-2">
+                GoodBlue is free during our early access phase. Paid plans coming soon.
+            </p>
           </div>
 
           {/* simple placeholder illustration */}
