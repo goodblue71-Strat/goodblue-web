@@ -13,7 +13,7 @@ export default function Footer() {
             <a href="#linkedin" className="hover:text-gray-900">
               LinkedIn
             </a>
-            <a href="#privacy" className="hover:text-gray-900">
+            <a href="/privacy" className="hover:text-gray-900">
               Privacy
             </a>
             <a href="#terms" className="hover:text-gray-900">
