@@ -43,6 +43,11 @@ export default function Home() {
           </div>
         </div>
       </Section>
+import ContactSection from "@/components/ContactSection";
+<Frameworks />
+<CTASection />
+<ContactSection />
+<Footer />
 
       <HowItWorks />
       <Frameworks />
