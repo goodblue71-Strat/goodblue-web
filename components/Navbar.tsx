@@ -15,7 +15,7 @@ export default function Navbar() {
             <Link href="#frameworks" className="text-sm text-gray-700 hover:text-gray-900">
               Frameworks
             </Link>
-            <Link href="#pricing" className="text-sm text-gray-700 hover:text-gray-900">
+            <Link href="/Pricing" className="text-sm text-gray-700 hover:text-gray-900">
               Pricing
             </Link>
             <a
