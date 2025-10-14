@@ -45,7 +45,7 @@ export default function Home() {
           {/* Right column: image */}
           <div className="flex justify-center">
             <Image
-              src="/hero-image.png"
+              src="/StrategyDashboard.png"
               alt="GoodBlue strategy app interface"
               width={500}
               height={400}
