@@ -46,7 +46,7 @@ export default function Home() {
           <div className="flex justify-center">
             <Image
               src="/StrategyDashboard.png"
-              alt="GoodBlue strategy app interface"
+              alt="GoodBlue strategy"
               width={500}
               height={400}
               className="rounded-xl shadow-md border border-blue-100"
