@@ -60,7 +60,7 @@ export default function TermsPage() {
             href="mailto:goodblue71@gmail.com"
             className="text-blue-600 hover:underline"
           >
-            hello@gooblue.ai
+            goodblue71@gmail.com
           </a>.
         </p>
       </Section>
