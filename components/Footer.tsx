@@ -7,7 +7,7 @@ export default function Footer() {
             © {new Date().getFullYear()}. GoodBlue.ai
           </p>
           <div className="flex items-center gap-5 flex-wrap min-w-0">
-            <a href="#contact" className="hover:text-gray-900">
+            <a href="/contact" className="hover:text-gray-900">
               Contact
             </a>
             <a href="#linkedin" className="hover:text-gray-900">
