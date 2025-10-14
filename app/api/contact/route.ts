@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       from,
       to,
       subject: `New feedback from ${_name}`,
-      reply_to: _email,
+      replyTo: _email,
       text: `From: ${_name} <${_email}>\n\n${_message}`,
     });
 
