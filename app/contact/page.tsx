@@ -3,6 +3,11 @@ import Section from "@/components/Section";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+export const metadata = {
+  title: "Contact — GoodBlue",
+  description: "Send feedback or get in touch with the GoodBlue team.",
+};
+
 export default function ContactPage() {
   return (
     <>
