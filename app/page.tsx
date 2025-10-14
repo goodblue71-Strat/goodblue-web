@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Section from "@/components/Section";
 import HowItWorks from "@/components/HowItWorks";
@@ -15,6 +16,7 @@ export default function Home() {
       {/* Hero */}
       <Section className="pt-4">
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+          {/* Left column: text */}
           <div>
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
               Strategy, generated—board-ready in minutes.
@@ -25,7 +27,8 @@ export default function Home() {
             <div className="mt-8 flex items-center gap-4">
               <a
                 href={appUrl}
-                target="_blank" rel="noopener noreferrer"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
               >
                 Try the App
@@ -35,20 +38,23 @@ export default function Home() {
               </a>
             </div>
             <p className="text-sm text-gray-500 mt-2">
-                GoodBlue is free during our early access phase. Paid plans coming soon.
+              GoodBlue is free during our early access phase. Paid plans coming soon.
             </p>
           </div>
 
-          {/* simple placeholder illustration */}
-          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6 shadow-sm">
-            <div className="h-40 rounded-lg bg-white shadow-inner" />
-            <div className="mt-4 h-24 rounded-lg bg-white shadow-inner" />
+          {/* Right column: image */}
+          <div className="flex justify-center">
+            <Image
+              src="/hero-image.png"
+              alt="GoodBlue strategy app interface"
+              width={500}
+              height={400}
+              className="rounded-xl shadow-md border border-blue-100"
+              priority
+            />
           </div>
         </div>
       </Section>
-<Frameworks />
-<CTASection />
-<Footer />
 
       <HowItWorks />
       <Frameworks />
