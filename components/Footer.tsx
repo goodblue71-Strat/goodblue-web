@@ -16,7 +16,7 @@ export default function Footer() {
             <a href="/Privacy" className="hover:text-gray-900">
               Privacy
             </a>
-            <a href="#terms" className="hover:text-gray-900">
+            <a href="/Terms" className="hover:text-gray-900">
               Terms
             </a>
           </div>
