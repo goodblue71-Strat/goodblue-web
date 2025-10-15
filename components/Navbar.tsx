@@ -38,14 +38,17 @@ export default function Navbar() {
     Pricing
   </Link>
 
-  <a
+  {/* Only show button if not embedded in Streamlit */}
+  {!isEmbedded && (
+   <a
     href={appUrl}
     target="_blank"
     rel="noopener noreferrer"
     className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 whitespace-nowrap"
-  >
+   >
     Try the App
-  </a>
+   </a>
+  )}
 </nav>          
         </div>
       </div>
