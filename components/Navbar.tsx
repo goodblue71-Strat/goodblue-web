@@ -1,52 +1,59 @@
 // components/Navbar.tsx
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";  // Required import
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "#";
   const [isEmbedded, setIsEmbedded] = useState(false);
 
   useEffect(() => {
-    // Detect if this is rendered inside an iframe (e.g., Streamlit)
+    // Detect if inside an iframe (like Streamlit)
     try {
       setIsEmbedded(window.self !== window.top);
     } catch {
-      // Cross-origin frame can throw; treat as embedded just in case
       setIsEmbedded(true);
     }
   }, []);
+
+  // Helper: dynamic target (open in new tab if embedded)
+  const target = isEmbedded ? "_blank" : "_self";
 
   return (
     <header className="w-full">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-6 min-w-0">
-          <a href="https://goodblue.ai/" className="text-xl font-semibold shrink-0" target="_top">
+          <a
+            href="https://goodblue.ai/"
+            target={target}
+            rel="noopener noreferrer"
+            className="text-xl font-semibold shrink-0"
+          >
             GoodBlue
           </a>
 
           <nav className="flex items-center gap-6 flex-wrap min-w-0">
             <a
               href="https://goodblue.ai/"
+              target={target}
+              rel="noopener noreferrer"
               className="text-sm text-gray-700 hover:text-gray-900"
-              target="_top"
             >
               Home
             </a>
-
             <a
               href="https://goodblue.ai/#frameworks"
+              target={target}
+              rel="noopener noreferrer"
               className="text-sm text-gray-700 hover:text-gray-900"
-              target="_top"
             >
               Frameworks
             </a>
-
             <a
-              href="https://goodblue.ai/Pricing"
+              href="https://goodblue.ai/pricing"
+              target={target}
+              rel="noopener noreferrer"
               className="text-sm text-gray-700 hover:text-gray-900"
-              target="_top"
             >
               Pricing
             </a>
