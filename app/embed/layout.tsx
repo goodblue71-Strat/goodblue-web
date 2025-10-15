@@ -11,7 +11,7 @@ export default function EmbedLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        {/* Make all links inside the iframe open in the parent (Streamlit) window */}
+        {/* Make all links inside the iframe open in the top (Streamlit) window */}
         <base target="_top" />
       </head>
       <body
