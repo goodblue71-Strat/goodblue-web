@@ -28,7 +28,7 @@ export default function Navbar() {
   </Link>
 
   <Link
-    href="https://goodblue.ai/pricing"
+    href="https://goodblue.ai/Pricing"
     className="text-sm text-gray-700 hover:text-gray-900"
     prefetch={false}
   >
