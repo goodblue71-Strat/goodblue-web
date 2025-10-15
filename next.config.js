@@ -14,7 +14,7 @@ const nextConfig = {
               "'self'",
               "http://localhost:8501",          // Streamlit local
               "http://localhost:3000",          // (optional) if you embed Next locally
-              "https://YOUR-STREAMLIT-DOMAIN",  // <-- replace with prod Streamlit URL
+              "https://https://goodblue-app-4ugg4rsrtsgbrdc6jlnqtp.streamlit.app/",  // <-- replace with prod Streamlit URL
             ].join(" "),
           },
           // If your platform injects X-Frame-Options=DENY, override/remove for this path:
