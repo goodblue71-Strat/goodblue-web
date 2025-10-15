@@ -3,21 +3,21 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Only the /embed/* routes can be iframed
         source: "/embed/:path*",
         headers: [
           {
             key: "Content-Security-Policy",
-            // Allow local Streamlit and your deployed Streamlit origin to embed this page
+            // ✅ List *origins* only (no trailing slash), each separated by spaces
             value: [
               "frame-ancestors",
               "'self'",
-              "http://localhost:8501",          // Streamlit local
-              "http://localhost:3000",          // (optional) if you embed Next locally
-              "https://https://goodblue-app-4ugg4rsrtsgbrdc6jlnqtp.streamlit.app/",  // <-- replace with prod Streamlit URL
+              "http://localhost:8501", // Streamlit local
+              // keep localhost:3000 only if you embed Next -> Next during dev
+              //"http://localhost:3000",
+              "https://goodblue-app-4ugg4rsrtsgbrdc6jlnqtp.streamlit.app", // ✅ your Streamlit prod origin (no trailing slash)
             ].join(" "),
           },
-          // If your platform injects X-Frame-Options=DENY, override/remove for this path:
+          // Optional: if something injects X-Frame-Options=DENY by default, override/remove for /embed/*
           // { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Cache-Control", value: "public, max-age=60" },
         ],
@@ -25,4 +25,5 @@ const nextConfig = {
     ];
   },
 };
+
 module.exports = nextConfig;
