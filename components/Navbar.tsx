@@ -22,37 +22,37 @@ export default function Navbar() {
     <header className="w-full">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-6 min-w-0">
-          <Link href="/" className="text-xl font-semibold shrink-0">
+          <a href="https://goodblue.ai/" className="text-xl font-semibold shrink-0">
             GoodBlue
-          </Link>
+          </a>
 
           <nav className="flex items-center gap-6 flex-wrap min-w-0">
-            <Link
+            <a
               href="https://goodblue.ai/"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
               prefetch={false}
             >
               Home
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="https://goodblue.ai/#frameworks"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
               prefetch={false}
             >
               Frameworks
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="https://goodblue.ai/Pricing"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
               prefetch={false}
             >
               Pricing
-            </Link>
+            </a>
 
             {/* Only show button if not embedded in Streamlit */}
             {!isEmbedded && (
