@@ -3,6 +3,17 @@ import Link from "next/link";
 
 export default function Navbar() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "#";
+  const [isEmbedded, setIsEmbedded] = useState(false);
+
+  useEffect(() => {
+    // Detect if this is rendered inside an iframe (e.g., Streamlit)
+    try {
+      setIsEmbedded(window.self !== window.top);
+    } catch {
+      // Cross-origin frame can throw; treat as embedded just in case
+      setIsEmbedded(true);
+    }
+  }, []);
   return (
     <header className="w-full">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
