@@ -31,7 +31,6 @@ export default function Navbar() {
               href="https://goodblue.ai/"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
-              prefetch={false}
             >
               Home
             </a>
@@ -40,7 +39,6 @@ export default function Navbar() {
               href="https://goodblue.ai/#frameworks"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
-              prefetch={false}
             >
               Frameworks
             </a>
@@ -49,7 +47,6 @@ export default function Navbar() {
               href="https://goodblue.ai/Pricing"
               className="text-sm text-gray-700 hover:text-gray-900"
               target="_top"
-              prefetch={false}
             >
               Pricing
             </a>
