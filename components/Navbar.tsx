@@ -12,7 +12,7 @@ export default function Navbar() {
           </Link>
 
           <nav className="flex items-center gap-6 flex-wrap min-w-0">
-            <Link href="https://GoodBlue.ai/" className="text-sm text-gray-700 hover:text-gray-900">
+            <Link href="https://GoodBlue.ai/" className="text-sm text-gray-700 hover:text-gray-900"
               className="hover:text-gray-900"
               prefetch={false}
             >
