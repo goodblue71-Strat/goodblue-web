@@ -50,7 +50,7 @@ export default function Navbar() {
               Frameworks
             </a>
             <a
-              href="https://goodblue.ai/pricing"
+              href="https://goodblue.ai/Pricing"
               target={target}
               rel="noopener noreferrer"
               className="text-sm text-gray-700 hover:text-gray-900"
