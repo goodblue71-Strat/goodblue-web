@@ -13,6 +13,13 @@ export default function Navbar() {
 
           <nav className="flex items-center gap-6 flex-wrap min-w-0">
             <Link href="/" className="text-sm text-gray-700 hover:text-gray-900">
+              <a href="https://www.linkedin.com/in/kirthivani/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-900"
+            >
+              LinkedIn
+            </a>
               Home
             </Link>
             <Link href="#frameworks" className="text-sm text-gray-700 hover:text-gray-900">
