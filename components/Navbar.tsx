@@ -22,7 +22,7 @@ export default function Navbar() {
     <header className="w-full">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-6 min-w-0">
-          <a href="https://goodblue.ai/" className="text-xl font-semibold shrink-0">
+          <a href="https://goodblue.ai/" className="text-xl font-semibold shrink-0" target="_top">
             GoodBlue
           </a>
 
