@@ -1,4 +1,4 @@
-// app/embed/Footer/page.tsx
+// app/embed/footer/page.tsx
 // If your Footer uses hooks or client-only logic, add "use client" at the top.
 import Footer from "@/components/Footer"; 
 
