@@ -1,6 +1,8 @@
+// components/Navbar.tsx
 "use client";
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";  // Required import
 
 export default function Navbar() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "#";
@@ -15,6 +17,7 @@ export default function Navbar() {
       setIsEmbedded(true);
     }
   }, []);
+
   return (
     <header className="w-full">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -22,46 +25,47 @@ export default function Navbar() {
           <Link href="/" className="text-xl font-semibold shrink-0">
             GoodBlue
           </Link>
-<nav className="flex items-center gap-6 flex-wrap min-w-0">
-  <Link
-    href="https://goodblue.ai/"
-    className="text-sm text-gray-700 hover:text-gray-900"
-    target="_top"
-    prefetch={false}
-  >
-    Home
-  </Link>
 
-  <Link
-    href="https://goodblue.ai/#frameworks"
-    className="text-sm text-gray-700 hover:text-gray-900"
-    target="_top"
-    prefetch={false}
-  >
-    Frameworks
-  </Link>
+          <nav className="flex items-center gap-6 flex-wrap min-w-0">
+            <Link
+              href="https://goodblue.ai/"
+              className="text-sm text-gray-700 hover:text-gray-900"
+              target="_top"
+              prefetch={false}
+            >
+              Home
+            </Link>
 
-  <Link
-    href="https://goodblue.ai/Pricing"
-    className="text-sm text-gray-700 hover:text-gray-900"
-    target="_top"
-    prefetch={false}
-  >
-    Pricing
-  </Link>
+            <Link
+              href="https://goodblue.ai/#frameworks"
+              className="text-sm text-gray-700 hover:text-gray-900"
+              target="_top"
+              prefetch={false}
+            >
+              Frameworks
+            </Link>
 
-  {/* Only show button if not embedded in Streamlit */}
-  {!isEmbedded && (
-   <a
-    href={appUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 whitespace-nowrap"
-   >
-    Try the App
-   </a>
-  )}
-</nav>          
+            <Link
+              href="https://goodblue.ai/Pricing"
+              className="text-sm text-gray-700 hover:text-gray-900"
+              target="_top"
+              prefetch={false}
+            >
+              Pricing
+            </Link>
+
+            {/* Only show button if not embedded in Streamlit */}
+            {!isEmbedded && (
+              <a
+                href={appUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700 whitespace-nowrap"
+              >
+                Try the App
+              </a>
+            )}
+          </nav>
         </div>
       </div>
     </header>
