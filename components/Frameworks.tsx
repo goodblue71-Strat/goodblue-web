@@ -1,14 +1,15 @@
 import Section from "./Section";
+import Link from "next/link";
 
 const frameworks = [
-  "SWOT Analysis",
-  "Ansoff Matrix",
-  "TAM / SAM / SOM",
-  "Roadmap",
-  "Benchmarking",
-  "5 Forces",
-  "KPI Tree",
-  "Scenario",
+  { name: "SWOT Analysis", path: "/swot" },
+  { name: "Ansoff Matrix", path: "/notready" },
+  { name: "TAM / SAM / SOM", path: "/notready" },
+  { name: "Roadmap", path: "/notready" },
+  { name: "Benchmarking", path: "/notready" },
+  { name: "5 Forces", path: "/notready" },
+  { name: "KPI Tree", path: "/notready" },
+  { name: "Scenario", path: "/notready" },
 ];
 
 export default function Frameworks() {
@@ -18,9 +19,13 @@ export default function Frameworks() {
       <p className="text-gray-600 mt-2">Choose classic strategy lenses—combine multiple in one run.</p>
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {frameworks.map((f) => (
-          <div key={f} className="rounded-xl bg-white p-4 text-center text-sm font-medium text-gray-800 shadow-sm border border-gray-200">
-            {f}
-          </div>
+          <Link
+            key={f.name}
+            href={f.path}
+            className="rounded-xl bg-white p-4 text-center text-sm font-medium text-gray-800 shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer"
+          >
+            {f.name}
+          </Link>
         ))}
       </div>
     </Section>
