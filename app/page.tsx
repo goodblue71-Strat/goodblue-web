@@ -26,7 +26,7 @@ export default function Home() {
             </p>
             <div className="mt-8 flex items-center gap-4">
               <a
-                href={appUrl}
+                href="/swot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
