@@ -13,6 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="h-full bg-gray-50 text-gray-900 antialiased font-sans overflow-x-hidden">
         {children}
+       <Analytics />
       </body>
     </html>
   );
