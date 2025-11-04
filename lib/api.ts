@@ -1,4 +1,3 @@
-// lib/api.ts
 export async function generateSWOT({
   company,
   goal,
@@ -11,7 +10,7 @@ export async function generateSWOT({
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
   const response = await fetch(`${API_BASE}/app/swot`, {
-    method: "POST",
+    method: "POST",  // must be POST
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ company, goal, prompt }),
   });
