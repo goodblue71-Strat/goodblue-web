@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { generateSWOT } from "../../lib/api";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function SWOTPage() {
@@ -26,6 +27,8 @@ export default function SWOTPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+    <Navbar />
+     <div className="min-h-screen flex flex-col">
       <main className="flex-grow p-8 bg-gray-50 text-gray-800">
         <h1 className="text-3xl font-bold mb-6">SWOT Generator</h1>
         <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
