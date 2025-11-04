@@ -49,8 +49,11 @@ export default function SWOTResultsPage() {
           return line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/);
         })
         .map(line => {
-          // Remove the bullet/number prefix
-          return line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '').trim();
+          // Remove the bullet/number prefix and clean up ** markers
+          let cleaned = line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '').trim();
+          // Remove leading and trailing ** from the entire line
+          cleaned = cleaned.replace(/^\*\*/, '').replace(/\*\*$/, '');
+          return cleaned;
         })
         .filter(line => line.length > 0);
     };
@@ -69,6 +72,21 @@ export default function SWOTResultsPage() {
     }
 
     return parsed;
+  };
+
+  // Helper function to parse and render text with bold subtitles
+  const renderBulletWithBold = (text: string) => {
+    // Match text between ** ** for bolding
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        // Remove ** and make it bold
+        const boldText = part.replace(/^\*\*/, '').replace(/\*\*$/, '');
+        return <strong key={index}>{boldText}</strong>;
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
   useEffect(() => {
@@ -133,7 +151,7 @@ export default function SWOTResultsPage() {
                   {parsedSWOT.strengths.map((item, index) => (
                     <li key={index} className="text-gray-700 flex items-start">
                       <span className="mr-2 text-green-600 font-bold">•</span>
-                      <span>{item}</span>
+                      <span>{renderBulletWithBold(item)}</span>
                     </li>
                   ))}
                 </ul>
@@ -152,7 +170,7 @@ export default function SWOTResultsPage() {
                   {parsedSWOT.weaknesses.map((item, index) => (
                     <li key={index} className="text-gray-700 flex items-start">
                       <span className="mr-2 text-red-600 font-bold">•</span>
-                      <span>{item}</span>
+                      <span>{renderBulletWithBold(item)}</span>
                     </li>
                   ))}
                 </ul>
@@ -171,7 +189,7 @@ export default function SWOTResultsPage() {
                   {parsedSWOT.opportunities.map((item, index) => (
                     <li key={index} className="text-gray-700 flex items-start">
                       <span className="mr-2 text-blue-600 font-bold">•</span>
-                      <span>{item}</span>
+                      <span>{renderBulletWithBold(item)}</span>
                     </li>
                   ))}
                 </ul>
@@ -190,7 +208,7 @@ export default function SWOTResultsPage() {
                   {parsedSWOT.threats.map((item, index) => (
                     <li key={index} className="text-gray-700 flex items-start">
                       <span className="mr-2 text-orange-600 font-bold">•</span>
-                      <span>{item}</span>
+                      <span>{renderBulletWithBold(item)}</span>
                     </li>
                   ))}
                 </ul>
