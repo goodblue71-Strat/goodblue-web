@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { generateSWOT } from "../../lib/api";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,15 +12,14 @@ export default function SWOTPage() {
   const [goal, setGoal] = useState("");
   const [feature, setFeature] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [swot, setSwot] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
   const showCTA = pathname !== "/swot" && pathname !== "/app/swot";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setSwot(null);
     try {
       const data = await generateSWOT({ 
         company, 
@@ -28,12 +28,22 @@ export default function SWOTPage() {
         feature: feature || undefined,
         prompt: prompt || undefined 
       });
-      setSwot(data.swot_analysis);
+      
+      // Store the result and navigate to results page
+      sessionStorage.setItem("swotResult", JSON.stringify({
+        company,
+        product,
+        goal,
+        feature,
+        swot_analysis: data.swot_analysis
+      }));
+      
+      router.push("/swot/results");
     } catch (err) {
       console.error(err);
       alert("Error generating SWOT");
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -87,14 +97,6 @@ export default function SWOTPage() {
               {loading ? "Generating..." : "Generate SWOT"}
             </button>
           </form>
-          {swot && (
-            <div className="mt-8 bg-gray-50 border border-gray-200 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-2 text-center text-gray-800">
-                Result
-              </h2>
-              <pre className="whitespace-pre-wrap text-gray-700">{swot}</pre>
-            </div>
-          )}
         </div>
       </main>
       <Footer />
