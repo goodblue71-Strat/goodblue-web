@@ -75,7 +75,7 @@ export default function SWOTResultsPage() {
   // Helper function to parse and render text with bold subtitles
   const renderBulletWithBold = (text: string) => {
     // Split by ** markers and process each part
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactNode[] = [];
     let currentIndex = 0;
     const regex = /\*\*([^*]+)\*\*/g;
     let match;
