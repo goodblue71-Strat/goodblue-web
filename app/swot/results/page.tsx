@@ -32,31 +32,41 @@ export default function SWOTResultsPage() {
       threats: [],
     };
 
-    const sections = analysis.split(/\*\*(?:Strengths?|Weaknesses?|Opportunities?|Threats?):\*\*/i);
-    const headers = analysis.match(/\*\*(?:Strengths?|Weaknesses?|Opportunities?|Threats?):\*\*/gi) || [];
+    // Split by common section headers (case insensitive, various formats)
+    const strengthsMatch = analysis.match(/(?:\*\*)?Strengths?(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Weaknesses?|Opportunities?|Threats?)(?:\*\*)?:|\s*$)/i);
+    const weaknessesMatch = analysis.match(/(?:\*\*)?Weaknesses?(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Strengths?|Opportunities?|Threats?)(?:\*\*)?:|\s*$)/i);
+    const opportunitiesMatch = analysis.match(/(?:\*\*)?Opportunities?(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Strengths?|Weaknesses?|Threats?)(?:\*\*)?:|\s*$)/i);
+    const threatsMatch = analysis.match(/(?:\*\*)?Threats?(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Strengths?|Weaknesses?|Opportunities?)(?:\*\*)?:|\s*$)/i);
 
-    headers.forEach((header, index) => {
-      const sectionText = sections[index + 1];
-      if (!sectionText) return;
-
-      // Extract bullet points (lines starting with -, *, or •)
-      const bullets = sectionText
+    const extractBullets = (text: string): string[] => {
+      if (!text) return [];
+      
+      return text
         .split('\n')
         .map(line => line.trim())
-        .filter(line => line.match(/^[-*•]\s+/))
-        .map(line => line.replace(/^[-*•]\s+/, ''));
+        .filter(line => {
+          // Match lines starting with -, *, •, or numbers like 1., 2.
+          return line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/);
+        })
+        .map(line => {
+          // Remove the bullet/number prefix
+          return line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '').trim();
+        })
+        .filter(line => line.length > 0);
+    };
 
-      const headerLower = header.toLowerCase();
-      if (headerLower.includes('strength')) {
-        parsed.strengths = bullets;
-      } else if (headerLower.includes('weakness')) {
-        parsed.weaknesses = bullets;
-      } else if (headerLower.includes('opportunit')) {
-        parsed.opportunities = bullets;
-      } else if (headerLower.includes('threat')) {
-        parsed.threats = bullets;
-      }
-    });
+    if (strengthsMatch && strengthsMatch[1]) {
+      parsed.strengths = extractBullets(strengthsMatch[1]);
+    }
+    if (weaknessesMatch && weaknessesMatch[1]) {
+      parsed.weaknesses = extractBullets(weaknessesMatch[1]);
+    }
+    if (opportunitiesMatch && opportunitiesMatch[1]) {
+      parsed.opportunities = extractBullets(opportunitiesMatch[1]);
+    }
+    if (threatsMatch && threatsMatch[1]) {
+      parsed.threats = extractBullets(threatsMatch[1]);
+    }
 
     return parsed;
   };
@@ -66,7 +76,10 @@ export default function SWOTResultsPage() {
     if (storedResult) {
       const data = JSON.parse(storedResult);
       setResult(data);
-      setParsedSWOT(parseSWOTAnalysis(data.swot_analysis));
+      const parsed = parseSWOTAnalysis(data.swot_analysis);
+      console.log("Raw SWOT Analysis:", data.swot_analysis);
+      console.log("Parsed SWOT:", parsed);
+      setParsedSWOT(parsed);
     } else {
       router.push("/swot");
     }
@@ -115,14 +128,18 @@ export default function SWOTResultsPage() {
               <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center">
                 <span className="mr-2">💪</span> Strengths
               </h3>
-              <ul className="space-y-2">
-                {parsedSWOT.strengths.map((item, index) => (
-                  <li key={index} className="text-gray-700 flex items-start">
-                    <span className="mr-2 text-green-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {parsedSWOT.strengths.length > 0 ? (
+                <ul className="space-y-2">
+                  {parsedSWOT.strengths.map((item, index) => (
+                    <li key={index} className="text-gray-700 flex items-start">
+                      <span className="mr-2 text-green-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No strengths found</p>
+              )}
             </div>
 
             {/* Weaknesses */}
@@ -130,14 +147,18 @@ export default function SWOTResultsPage() {
               <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center">
                 <span className="mr-2">⚠️</span> Weaknesses
               </h3>
-              <ul className="space-y-2">
-                {parsedSWOT.weaknesses.map((item, index) => (
-                  <li key={index} className="text-gray-700 flex items-start">
-                    <span className="mr-2 text-red-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {parsedSWOT.weaknesses.length > 0 ? (
+                <ul className="space-y-2">
+                  {parsedSWOT.weaknesses.map((item, index) => (
+                    <li key={index} className="text-gray-700 flex items-start">
+                      <span className="mr-2 text-red-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No weaknesses found</p>
+              )}
             </div>
 
             {/* Opportunities */}
@@ -145,14 +166,18 @@ export default function SWOTResultsPage() {
               <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
                 <span className="mr-2">🎯</span> Opportunities
               </h3>
-              <ul className="space-y-2">
-                {parsedSWOT.opportunities.map((item, index) => (
-                  <li key={index} className="text-gray-700 flex items-start">
-                    <span className="mr-2 text-blue-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {parsedSWOT.opportunities.length > 0 ? (
+                <ul className="space-y-2">
+                  {parsedSWOT.opportunities.map((item, index) => (
+                    <li key={index} className="text-gray-700 flex items-start">
+                      <span className="mr-2 text-blue-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No opportunities found</p>
+              )}
             </div>
 
             {/* Threats */}
@@ -160,14 +185,18 @@ export default function SWOTResultsPage() {
               <h3 className="text-xl font-bold text-orange-800 mb-4 flex items-center">
                 <span className="mr-2">⚡</span> Threats
               </h3>
-              <ul className="space-y-2">
-                {parsedSWOT.threats.map((item, index) => (
-                  <li key={index} className="text-gray-700 flex items-start">
-                    <span className="mr-2 text-orange-600 font-bold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {parsedSWOT.threats.length > 0 ? (
+                <ul className="space-y-2">
+                  {parsedSWOT.threats.map((item, index) => (
+                    <li key={index} className="text-gray-700 flex items-start">
+                      <span className="mr-2 text-orange-600 font-bold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No threats found</p>
+              )}
             </div>
           </div>
 
