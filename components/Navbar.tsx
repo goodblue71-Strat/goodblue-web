@@ -77,7 +77,6 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             {!isEmbedded && showCTA && (
               <a
                 href={appUrl}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-5 py-2 text-white shadow hover:bg-blue-700 transition-colors whitespace-nowrap"
               >
