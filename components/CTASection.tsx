@@ -8,8 +8,8 @@ export default function CTASection() {
       <p className="text-gray-600 mt-2">GoodBlue helps teams move from data → decision → deck.</p>
       <div className="mt-6">
         <a
-          href={appUrl}
-          target="_blank" rel="noopener noreferrer"
+          href="/tryapp"
+          rel="noopener noreferrer"
           className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
         >
           Try the App
