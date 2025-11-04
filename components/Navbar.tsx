@@ -76,7 +76,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             {/* Try App Button (hidden if embedded or showCTA=false) */}
             {!isEmbedded && showCTA && (
               <a
-                href={appUrl}
+                href="/tryapp"
                 rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-5 py-2 text-white shadow hover:bg-blue-700 transition-colors whitespace-nowrap"
               >
