@@ -35,7 +35,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             className="flex items-center space-x-2"
           >
             <Image
-              src="/goodblue-logo.svg"
+              src="/favicon.ico"
               alt="GoodBlue logo"
               width={32}
               height={32}
