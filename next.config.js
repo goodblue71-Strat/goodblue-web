@@ -14,7 +14,7 @@ const nextConfig = {
               "http://localhost:8501", // Streamlit local
               // keep localhost:3000 only if you embed Next -> Next during dev
               //"http://localhost:3000",
-              "https://goodblue-app-4ugg4rsrtsgbrdc6jlnqtp.streamlit.app", // ✅ your Streamlit prod origin (no trailing slash)
+              "https://goodblue-backend-production.up.railway.app", // ✅ your Streamlit prod origin (no trailing slash)
             ].join(" "),
           },
           // Optional: if something injects X-Frame-Options=DENY by default, override/remove for /embed/*
