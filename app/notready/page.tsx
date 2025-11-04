@@ -15,7 +15,7 @@ export default function FrameworksPage() {
         <h1 className="text-3xl sm:text-4xl font-bold mb-6">Frameworks</h1>
         <p className="text-gray-600 mb-8 text-lg">
           Our strategic frameworks are <strong>currently in development</strong> and will be available soon.
-          We're building powerful tools to help you analyze and plan your business strategy.
+          We&apos;re building powerful tools to help you analyze and plan your business strategy.
         </p>
         <div className="mt-8">
           
