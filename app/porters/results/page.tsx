@@ -37,7 +37,7 @@ export default function PorterResultsPage() {
   const [result, setResult] = useState<PorterResult | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const showCTA = pathname !== "/porters" && pathname !== "/app/porters";
+  const showCTA = false;
 
   useEffect(() => {
     const stored = sessionStorage.getItem("porterResult");
