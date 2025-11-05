@@ -50,3 +50,51 @@ export async function generateAnsoff({
   
   return await response.json();
 }
+export async function generateTAM({
+  company,
+  product,
+  feature,
+  industry,
+  region,
+  segment,
+  avgSpend,
+  adoption,
+  targetShare,
+  prompt,
+}: {
+  company: string;
+  product: string;
+  feature?: string;
+  industry: string;
+  region: string;
+  segment: string;
+  avgSpend?: number | string;
+  adoption?: number | string;
+  targetShare?: number | string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+  const response = await fetch(`${API_BASE}/app/tam`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      company,
+      product,
+      feature,
+      industry,
+      region,
+      segment,
+      avgSpend,
+      adoption,
+      targetShare,
+      prompt,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}
