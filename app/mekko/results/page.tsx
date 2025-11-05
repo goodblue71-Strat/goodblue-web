@@ -5,16 +5,15 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 
-
 type Subsegment = {
   name: string;
-  share: number; // % within segment (0–100)
-  growth?: number; // % CAGR
+  share: number;
+  growth?: number;
 };
 
 type Segment = {
   name: string;
-  market_size: number; // e.g., $B
+  market_size: number;
   growth_rate?: number;
   subsegments?: Subsegment[];
 };
@@ -39,10 +38,8 @@ export default function MekkoResultsPage() {
 
   const router = useRouter();
   const pathname = usePathname();
-  //const showCTA = pathname !== "/mekko" && pathname !== "/app/mekko";
   const showCTA = false;
 
-  // --- Helpers ---
   const tryParseJSON = (input: any) => {
     if (typeof input !== "string") return input ?? null;
     try {
@@ -54,17 +51,15 @@ export default function MekkoResultsPage() {
 
   const cleanText = (text?: string) => (text || "").replace(/```json|```/g, "").trim();
 
-  // More vivid GoodBlue gradient colors by growth %
   const growthColor = (g?: number) => {
-    if (g == null) return "#93C5FD"; // default pale blue
-    if (g >= 30) return "#0284c7"; // cyan-700
-    if (g >= 20) return "#0ea5e9"; // cyan-500
-    if (g >= 10) return "#38bdf8"; // cyan-400
-    if (g >= 5) return "#60a5fa"; // blue-400
-    return "#cbd5e1"; // slate-300 (slow)
+    if (g == null) return "#93C5FD";
+    if (g >= 30) return "#1e3a8a"; // blue-900
+    if (g >= 20) return "#2563eb"; // blue-600
+    if (g >= 10) return "#3b82f6"; // blue-500
+    if (g >= 5) return "#60a5fa";  // blue-400
+    return "#cbd5e1";              // slate-300
   };
 
-  // --- Load session data ---
   useEffect(() => {
     const stored = sessionStorage.getItem("mekkoResult");
     if (!stored) {
@@ -74,7 +69,6 @@ export default function MekkoResultsPage() {
 
     let result: MekkoResultStored = JSON.parse(stored);
     let analysis = result.mekko_analysis;
-
     let obj = tryParseJSON(analysis) ?? analysis;
 
     if (obj && typeof obj === "object" && typeof obj.summary === "string") {
@@ -109,7 +103,6 @@ export default function MekkoResultsPage() {
       }));
     }
 
-    // fallback demo
     if (!segments?.length) {
       segments = [
         {
@@ -179,12 +172,12 @@ export default function MekkoResultsPage() {
     text.split(/\n+/).filter((p) => p.trim().length > 0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-50 text-gray-800">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-100 text-gray-800">
       <Navbar showCTA={showCTA} />
 
       <main className="flex-grow flex flex-col items-center justify-start px-4 py-12">
         <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg p-10 border border-gray-100">
-          <h1 className="text-4xl font-bold text-center text-cyan-700 mb-2">
+          <h1 className="text-4xl font-bold text-center text-blue-700 mb-2">
             Market Structure (Mekko)
           </h1>
           <p className="text-center text-gray-600 mb-8 text-lg">
@@ -199,12 +192,11 @@ export default function MekkoResultsPage() {
             )}
           </p>
 
-          {/* Summary */}
           {parsed.summary && (
-            <div className="mb-10 p-8 bg-gradient-to-br from-cyan-50 to-blue-100 rounded-xl border border-blue-200 shadow-sm">
+            <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-1 h-8 bg-cyan-600 rounded-full"></div>
-                <h2 className="text-2xl font-bold text-cyan-900">Executive Summary</h2>
+                <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                <h2 className="text-2xl font-bold text-blue-900">Executive Summary</h2>
               </div>
               {formatSummary(parsed.summary).map((p, i) => (
                 <p key={i} className="text-gray-700 leading-relaxed mb-3">
@@ -214,94 +206,87 @@ export default function MekkoResultsPage() {
             </div>
           )}
 
-          {/* Mekko Visualization */}
-<h2 className="text-2xl font-bold text-gray-800 mb-4">Market Map</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Market Map</h2>
 
-{/* Chart container */}
-<div className="w-full h-[420px] bg-gray-50 rounded-xl p-4 border border-gray-200 overflow-visible">
-  <div className="flex h-[360px] w-full">
-    {normalizedSegments.map((seg, idx) => {
-      const widthPct = totalSize > 0 ? (seg.market_size / totalSize) * 100 : 0;
-      return (
-        <div
-          key={idx}
-          className="relative h-full border-r last:border-r-0 border-white"
-          style={{ width: `${widthPct}%` }}
-        >
-          {/* Subsegments */}
-          <div className="absolute inset-x-0 bottom-0 flex flex-col-reverse h-full">
-            {seg.subsegments!.map((sub, sidx) => (
-              <div
-                key={sidx}
-                className="relative flex items-center justify-center"
-                style={{
-                  height: `${sub.share}%`,
-                  background: growthColor(sub.growth ?? seg.growth_rate),
-                  borderTop: "1px solid rgba(255,255,255,0.8)",
-                }}
-              >
-                {/* Subsegment label with share */}
-                <div className="text-[11px] text-white font-semibold truncate drop-shadow text-center px-1">
-                  {sub.name} – {sub.share.toFixed(1)}%
+          <div className="w-full h-[420px] bg-gray-50 rounded-xl p-4 border border-gray-200 overflow-visible">
+            <div className="flex h-[360px] w-full">
+              {normalizedSegments.map((seg, idx) => {
+                const widthPct = totalSize > 0 ? (seg.market_size / totalSize) * 100 : 0;
+                return (
+                  <div
+                    key={idx}
+                    className="relative h-full border-r last:border-r-0 border-white"
+                    style={{ width: `${widthPct}%` }}
+                  >
+                    <div className="absolute inset-x-0 bottom-0 flex flex-col-reverse h-full">
+                      {seg.subsegments!.map((sub, sidx) => (
+                        <div
+                          key={sidx}
+                          className="relative flex items-center justify-center"
+                          style={{
+                            height: `${sub.share}%`,
+                            background: growthColor(sub.growth ?? seg.growth_rate),
+                            borderTop: "1px solid rgba(255,255,255,0.8)",
+                          }}
+                        >
+                          <div className="text-[11px] text-white font-semibold truncate drop-shadow text-center px-1">
+                            {sub.name} – {sub.share.toFixed(1)}%
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex justify-between mt-3 px-2">
+              {normalizedSegments.map((seg, idx) => (
+                <div
+                  key={idx}
+                  className="text-center text-[12px] font-semibold text-slate-800"
+                  style={{
+                    width: `${(seg.market_size / totalSize) * 100}%`,
+                  }}
+                >
+                  {seg.name}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      );
-    })}
-  </div>
 
-  {/* Segment labels below X-axis */}
-  <div className="flex justify-between mt-3 px-2">
-    {normalizedSegments.map((seg, idx) => (
-      <div
-        key={idx}
-        className="text-center text-[12px] font-semibold text-slate-800"
-        style={{
-          width: `${(seg.market_size / totalSize) * 100}%`,
-        }}
-      >
-        {seg.name}
-      </div>
-    ))}
-  </div>
-</div>
+          <div className="flex justify-center gap-4 mt-4 text-sm text-gray-600">
+            <span className="inline-flex items-center">
+              <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#cbd5e1" }}></span>
+              Low (&lt;5%)
+            </span>
+            <span className="inline-flex items-center">
+              <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#60a5fa" }}></span>
+              5–10%
+            </span>
+            <span className="inline-flex items-center">
+              <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#3b82f6" }}></span>
+              10–20%
+            </span>
+            <span className="inline-flex items-center">
+              <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#2563eb" }}></span>
+              20–30%
+            </span>
+            <span className="inline-flex items-center">
+              <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#1e3a8a" }}></span>
+              30%+
+            </span>
+          </div>
 
-{/* Centered color legend below chart */}
-<div className="flex justify-center gap-4 mt-4 text-sm text-gray-600">
-  <span className="inline-flex items-center">
-    <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#cbd5e1" }}></span>
-    Low (&lt;5%)
-  </span>
-  <span className="inline-flex items-center">
-    <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#60a5fa" }}></span>
-    5–10%
-  </span>
-  <span className="inline-flex items-center">
-    <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#38bdf8" }}></span>
-    10–20%
-  </span>
-  <span className="inline-flex items-center">
-    <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#0ea5e9" }}></span>
-    20–30%
-  </span>
-  <span className="inline-flex items-center">
-    <span className="inline-block w-4 h-4 mr-1 rounded" style={{ background: "#0284c7" }}></span>
-    30%+
-  </span>
-</div>
+          <p className="text-center text-xs text-gray-500 mt-2">
+            Width = Market size; Height = Subsegment share; Color = Growth rate (CAGR)
+          </p>
 
-<p className="text-center text-xs text-gray-500 mt-2">
-  Width = Market size; Height = Subsegment share; Color = Growth rate (CAGR)
-</p>
-          
-          {/* Breakdown Table */}
           <div className="mt-10 mb-10">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Segment Breakdown</h2>
             <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
               <table className="w-full text-left">
-                <thead className="bg-gradient-to-r from-cyan-600 to-blue-700 text-white">
+                <thead className="bg-gradient-to-r from-blue-700 to-blue-600 text-white">
                   <tr>
                     <th className="p-3 text-sm font-semibold">Segment</th>
                     <th className="p-3 text-sm font-semibold">Market Size</th>
@@ -340,22 +325,20 @@ export default function MekkoResultsPage() {
             </div>
           </div>
 
-          {/* Takeaway */}
           {parsed.takeaway && (
-            <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-cyan-100 rounded-xl border border-cyan-200 shadow-sm">
+            <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-1 h-8 bg-cyan-600 rounded-full"></div>
-                <h2 className="text-2xl font-bold text-cyan-900">Strategic Takeaway</h2>
+                <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                <h2 className="text-2xl font-bold text-blue-900">Strategic Takeaway</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">{parsed.takeaway}</p>
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => router.push("/mekko")}
-              className="px-8 py-3 rounded-full bg-cyan-600 text-white font-semibold shadow-lg hover:bg-cyan-700 hover:shadow-xl transition-all"
+              className="px-8 py-3 rounded-full bg-blue-700 text-white font-semibold shadow-lg hover:bg-blue-800 hover:shadow-xl transition-all"
             >
               New Analysis
             </button>
