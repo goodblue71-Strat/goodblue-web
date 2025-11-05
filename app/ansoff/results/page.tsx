@@ -75,11 +75,16 @@ export default function AnsoffResultsPage() {
       // Remove leading colon or dash if present
       const content = remainingText.replace(/^[:\-–—]\s*/, '');
       
+      // Check if subtitle already ends with colon
+      const hasColon = subtitle.endsWith(':');
+      
       return (
-        <div>
+        <div className="mb-3">
           <div className="flex items-start mb-1">
             <span className="mr-2 text-current font-bold mt-0.5">•</span>
-            <strong className="font-semibold">{subtitle}:</strong>
+            <strong className="font-semibold">
+              {hasColon ? subtitle : `${subtitle}:`}
+            </strong>
           </div>
           {content && <div className="ml-5 text-gray-600">{content}</div>}
         </div>
@@ -88,7 +93,7 @@ export default function AnsoffResultsPage() {
     
     // If no subtitle pattern found, display as plain text with bullet
     return (
-      <div className="flex items-start">
+      <div className="mb-3 flex items-start">
         <span className="mr-2 text-current font-bold mt-0.5">•</span>
         <span>{text}</span>
       </div>
@@ -154,7 +159,7 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + Existing Products</p>
               {parsedAnsoff.marketPenetration.length > 0 ? (
-                <div className="space-y-3 text-blue-900">
+                <div className="text-blue-900">
                   {parsedAnsoff.marketPenetration.map((item, index) => (
                     <div key={index}>
                       {renderBulletWithBold(item)}
@@ -173,7 +178,7 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">New Markets + Existing Products</p>
               {parsedAnsoff.marketDevelopment.length > 0 ? (
-                <div className="space-y-3 text-green-900">
+                <div className="text-green-900">
                   {parsedAnsoff.marketDevelopment.map((item, index) => (
                     <div key={index}>
                       {renderBulletWithBold(item)}
@@ -192,7 +197,7 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + New Products</p>
               {parsedAnsoff.productDevelopment.length > 0 ? (
-                <div className="space-y-3 text-orange-900">
+                <div className="text-orange-900">
                   {parsedAnsoff.productDevelopment.map((item, index) => (
                     <div key={index}>
                       {renderBulletWithBold(item)}
@@ -211,7 +216,7 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">New Markets + New Products</p>
               {parsedAnsoff.diversification.length > 0 ? (
-                <div className="space-y-3 text-red-900">
+                <div className="text-red-900">
                   {parsedAnsoff.diversification.map((item, index) => (
                     <div key={index}>
                       {renderBulletWithBold(item)}
