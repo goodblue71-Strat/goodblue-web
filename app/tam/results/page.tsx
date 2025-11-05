@@ -6,10 +6,11 @@ import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
-// Add these interfaces
+// Updated interface with index signature
 interface ChartDataItem {
   name: string;
   value: number;
+  [key: string]: string | number; // Add this index signature
 }
 
 interface TableRow {
