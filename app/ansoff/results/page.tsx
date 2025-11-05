@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,7 +25,7 @@ export default function AnsoffResultsPage() {
   const [parsedAnsoff, setParsedAnsoff] = useState<ParsedAnsoff | null>(null);
   const router = useRouter();
 
-  // --- Parsing logic (unchanged) ---
+  // --- Parsing logic ---
   const parseAnsoffAnalysis = (analysis: string): ParsedAnsoff => {
     const parsed: ParsedAnsoff = {
       marketPenetration: [],
@@ -110,7 +110,37 @@ export default function AnsoffResultsPage() {
       </div>
     );
 
-  // --- Color themes for each quadrant ---
+  // --- Determine recommended growth path ---
+  const recommended = useMemo(() => {
+    const counts = {
+      "Market Penetration": parsedAnsoff.marketPenetration.length,
+      "Market Development": parsedAnsoff.marketDevelopment.length,
+      "Product Development": parsedAnsoff.productDevelopment.length,
+      Diversification: parsedAnsoff.diversification.length,
+    };
+
+    const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    const [quadrant, count] = top;
+
+    if (count === 0) return null;
+
+    const descriptions: Record<string, string> = {
+      "Market Penetration":
+        "Focus on strengthening brand presence and increasing sales in current markets through better positioning, pricing, and loyalty programs.",
+      "Market Development":
+        "Consider expanding into new geographic or demographic markets to capture additional revenue streams while leveraging existing products.",
+      "Product Development":
+        "Invest in new product features, upgrades, or adjacent offerings that appeal to your existing customer base.",
+      Diversification:
+        "Explore new markets with new products, potentially through partnerships or innovation initiatives that align with emerging trends.",
+    };
+
+    return {
+      quadrant,
+      summary: descriptions[quadrant],
+    };
+  }, [parsedAnsoff]);
+
   const quadrantStyles = {
     penetration: "from-blue-50 to-blue-100 border-blue-200 text-blue-900",
     development: "from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-900",
@@ -128,110 +158,86 @@ export default function AnsoffResultsPage() {
             Ansoff Matrix Results
           </h1>
           <p className="text-center text-gray-500 mb-10 text-lg">
-            Strategic growth options for{" "}
+            Growth strategy insights for{" "}
             <span className="font-semibold text-blue-700">{result.company}</span>’s{" "}
             <span className="font-semibold text-blue-700">{result.product}</span> in{" "}
-            <span className="font-semibold text-blue-700">{result.market}</span> targeting{" "}
-            {result.goal}.
+            <span className="font-semibold text-blue-700">{result.market}</span> aiming for{" "}
+            <span className="font-semibold text-blue-700">{result.goal}</span>.
           </p>
 
-          {/* Info Card */}
+          {/* Key Takeaway */}
           <div className="mb-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm p-6">
-            <h2 className="text-2xl font-bold text-blue-900 mb-3">Analysis Summary</h2>
-            <ul className="text-gray-700 space-y-1">
-              <li>
-                <strong>Company:</strong> {result.company}
-              </li>
-              <li>
-                <strong>Product:</strong> {result.product}
-              </li>
-              <li>
-                <strong>Market:</strong> {result.market}
-              </li>
-              <li>
-                <strong>Goal:</strong> {result.goal}
-              </li>
-            </ul>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+              <h2 className="text-2xl font-bold text-blue-900">Key Takeaway</h2>
+            </div>
+            <p className="text-gray-700 leading-relaxed text-base">
+              This analysis highlights strategic growth opportunities for{" "}
+              <strong>{result.company}</strong>’s{" "}
+              <strong>{result.product}</strong> in{" "}
+              <strong>{result.market}</strong>. The best paths to{" "}
+              <strong>{result.goal}</strong> depend on balancing existing strengths with new
+              opportunities.
+            </p>
           </div>
 
-          {/* Ansoff Matrix Grid */}
+          {/* Ansoff Quadrants */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {/* Market Penetration */}
-            <div
-              className={`bg-gradient-to-br ${quadrantStyles.penetration} border-2 rounded-xl p-6 shadow-sm`}
-            >
-              <h3 className="text-2xl font-bold mb-3 flex items-center text-blue-800">
-                📊 Market Penetration
-              </h3>
-              <p className="text-sm text-gray-600 mb-4 italic">
-                Existing Products × Existing Markets
-              </p>
-              {parsedAnsoff.marketPenetration.length > 0 ? (
-                parsedAnsoff.marketPenetration.map((t, i) => (
-                  <div key={i}>{renderBullet(t)}</div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No strategies identified.</p>
-              )}
-            </div>
-
-            {/* Market Development */}
-            <div
-              className={`bg-gradient-to-br ${quadrantStyles.development} border-2 rounded-xl p-6 shadow-sm`}
-            >
-              <h3 className="text-2xl font-bold mb-3 flex items-center text-indigo-800">
-                🌍 Market Development
-              </h3>
-              <p className="text-sm text-gray-600 mb-4 italic">
-                Existing Products × New Markets
-              </p>
-              {parsedAnsoff.marketDevelopment.length > 0 ? (
-                parsedAnsoff.marketDevelopment.map((t, i) => (
-                  <div key={i}>{renderBullet(t)}</div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No strategies identified.</p>
-              )}
-            </div>
-
-            {/* Product Development */}
-            <div
-              className={`bg-gradient-to-br ${quadrantStyles.product} border-2 rounded-xl p-6 shadow-sm`}
-            >
-              <h3 className="text-2xl font-bold mb-3 flex items-center text-cyan-800">
-                🚀 Product Development
-              </h3>
-              <p className="text-sm text-gray-600 mb-4 italic">
-                New Products × Existing Markets
-              </p>
-              {parsedAnsoff.productDevelopment.length > 0 ? (
-                parsedAnsoff.productDevelopment.map((t, i) => (
-                  <div key={i}>{renderBullet(t)}</div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No strategies identified.</p>
-              )}
-            </div>
-
-            {/* Diversification */}
-            <div
-              className={`bg-gradient-to-br ${quadrantStyles.diversification} border-2 rounded-xl p-6 shadow-sm`}
-            >
-              <h3 className="text-2xl font-bold mb-3 flex items-center text-rose-800">
-                🎯 Diversification
-              </h3>
-              <p className="text-sm text-gray-600 mb-4 italic">
-                New Products × New Markets
-              </p>
-              {parsedAnsoff.diversification.length > 0 ? (
-                parsedAnsoff.diversification.map((t, i) => (
-                  <div key={i}>{renderBullet(t)}</div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No strategies identified.</p>
-              )}
-            </div>
+            {[
+              {
+                title: "📊 Market Penetration",
+                color: quadrantStyles.penetration,
+                desc: "Existing Products × Existing Markets",
+                data: parsedAnsoff.marketPenetration,
+              },
+              {
+                title: "🌍 Market Development",
+                color: quadrantStyles.development,
+                desc: "Existing Products × New Markets",
+                data: parsedAnsoff.marketDevelopment,
+              },
+              {
+                title: "🚀 Product Development",
+                color: quadrantStyles.product,
+                desc: "New Products × Existing Markets",
+                data: parsedAnsoff.productDevelopment,
+              },
+              {
+                title: "🎯 Diversification",
+                color: quadrantStyles.diversification,
+                desc: "New Products × New Markets",
+                data: parsedAnsoff.diversification,
+              },
+            ].map((q, i) => (
+              <div
+                key={i}
+                className={`bg-gradient-to-br ${q.color} border-2 rounded-xl p-6 shadow-sm`}
+              >
+                <h3 className="text-2xl font-bold mb-3 flex items-center">
+                  {q.title}
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 italic">{q.desc}</p>
+                {q.data.length > 0 ? (
+                  q.data.map((t, idx) => <div key={idx}>{renderBullet(t)}</div>)
+                ) : (
+                  <p className="text-gray-500 italic">No strategies identified.</p>
+                )}
+              </div>
+            ))}
           </div>
+
+          {/* Recommended Growth Path */}
+          {recommended && (
+            <div className="mb-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
+              <h2 className="text-2xl font-bold mb-2">💡 Recommended Growth Path</h2>
+              <p className="text-lg font-semibold mb-2">
+                Focus on <span className="underline">{recommended.quadrant}</span>
+              </p>
+              <p className="text-white/90 leading-relaxed">
+                {recommended.summary}
+              </p>
+            </div>
+          )}
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
