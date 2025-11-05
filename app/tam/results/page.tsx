@@ -60,6 +60,28 @@ export default function TAMResultsPage() {
 
   const COLORS = ["#93C5FD", "#3B82F6", "#1E40AF"];
 
+  // Custom label renderer showing name and value
+  const renderCustomLabel = (props: any) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, name, value } = props;
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        className="font-bold"
+      >
+        {`${name}: $${value}B`}
+      </text>
+    );
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
       <Navbar showCTA={showCTA} />
@@ -146,7 +168,7 @@ export default function TAMResultsPage() {
                     cx="50%"
                     cy="50%"
                     outerRadius={130}
-                    label={(props: any) => props.name}
+                    label={renderCustomLabel}
                     labelLine={false}
                   >
                     {chartData.map((entry: ChartDataItem, index: number) => (
@@ -154,7 +176,7 @@ export default function TAMResultsPage() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value: number) => `$${value}B`}
+                    formatter={(value: number) => `$${value} Billion`}
                     contentStyle={{ 
                       borderRadius: '8px', 
                       border: '1px solid #e5e7eb',
@@ -169,8 +191,8 @@ export default function TAMResultsPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-center text-sm text-gray-500 mt-2">
-              Values shown in billions (B)
+            <p className="text-center text-base font-medium text-gray-700 mt-3 bg-blue-50 inline-block px-4 py-2 rounded-lg mx-auto block w-fit">
+              💰 All values shown in Billions (USD)
             </p>
           </div>
 
