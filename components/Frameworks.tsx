@@ -5,9 +5,9 @@ const frameworks = [
   { name: "SWOT Analysis", path: "/swot" },
   { name: "Ansoff Matrix", path: "/ansoff" },
   { name: "TAM / SAM / SOM", path: "/tam" },
-  { name: "Roadmap", path: "/notready" },
+  { name: "Porter's 5 forces", path: "/porters" },
   { name: "Benchmarking", path: "/notready" },
-  { name: "5 Forces", path: "/notready" },
+  { name: "Roadmaps", path: "/notready" },
   { name: "KPI Tree", path: "/notready" },
   { name: "Scenario", path: "/notready" },
 ];
