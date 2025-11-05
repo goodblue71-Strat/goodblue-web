@@ -4,7 +4,7 @@ import Link from "next/link";
 const frameworks = [
   { name: "SWOT Analysis", path: "/swot" },
   { name: "Ansoff Matrix", path: "/ansoff" },
-  { name: "TAM / SAM / SOM", path: "/notready" },
+  { name: "TAM / SAM / SOM", path: "/tam" },
   { name: "Roadmap", path: "/notready" },
   { name: "Benchmarking", path: "/notready" },
   { name: "5 Forces", path: "/notready" },
