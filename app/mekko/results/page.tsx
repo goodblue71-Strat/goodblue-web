@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
-const showCTA = false;
+
 
 type Subsegment = {
   name: string;
@@ -39,7 +39,8 @@ export default function MekkoResultsPage() {
 
   const router = useRouter();
   const pathname = usePathname();
-  const showCTA = pathname !== "/mekko" && pathname !== "/app/mekko";
+  //const showCTA = pathname !== "/mekko" && pathname !== "/app/mekko";
+  const showCTA = false;
 
   // --- Helpers ---
   const tryParseJSON = (input: any) => {
