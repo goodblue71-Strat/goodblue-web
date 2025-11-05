@@ -28,10 +28,7 @@ interface PorterResult {
   product: string;
   industry: string;
   region?: string;
-  porters_analysis?: {
-    summary?: string;
-    forces?: Force[];
-  };
+  porters_analysis?: any;
 }
 
 export default function PorterResultsPage() {
@@ -45,24 +42,38 @@ export default function PorterResultsPage() {
     if (stored) {
       let parsed = JSON.parse(stored);
 
-      // --- Clean summary if JSON string was stored ---
+      // 🧩 Handle double-encoded or nested JSON
       try {
-        if (
-          typeof parsed.porters_analysis === "string" &&
-          parsed.porters_analysis.startsWith("{")
-        ) {
-          parsed.porters_analysis = JSON.parse(parsed.porters_analysis);
+        if (typeof parsed.porters_analysis === "string") {
+          const cleaned = parsed.porters_analysis.trim();
+          if (cleaned.startsWith("{") && cleaned.endsWith("}")) {
+            parsed.porters_analysis = JSON.parse(cleaned);
+          }
         }
-      } catch {
-        // leave as-is
+      } catch (e) {
+        console.error("Failed to parse porters_analysis:", e);
       }
 
-      // --- Normalize force fields (drivers → description, intensity → rating) ---
+      // 🧩 If still wrapped JSON text inside summary, extract it
+      if (typeof parsed.porters_analysis?.summary === "string" && parsed.porters_analysis.summary.includes("{")) {
+        try {
+          const inner = JSON.parse(parsed.porters_analysis.summary);
+          if (inner.summary) parsed.porters_analysis.summary = inner.summary;
+          if (inner.forces) parsed.porters_analysis.forces = inner.forces;
+        } catch {
+          // ignore
+        }
+      }
+
+      // 🧩 Normalize forces array
       if (parsed.porters_analysis?.forces) {
         parsed.porters_analysis.forces = parsed.porters_analysis.forces.map((f: any) => ({
           name: f.name || "Unnamed Force",
           score: f.score ?? 0,
-          rating: f.intensity || f.rating || (f.score >= 8 ? "High" : f.score >= 5 ? "Medium" : "Low"),
+          rating:
+            f.intensity ||
+            f.rating ||
+            (f.score >= 8 ? "High" : f.score >= 5 ? "Medium" : "Low"),
           description: f.drivers || f.description || "",
         }));
       }
@@ -77,36 +88,26 @@ export default function PorterResultsPage() {
 
   const { company, product, industry, region, porters_analysis } = result;
 
+  const summaryText = porters_analysis?.summary
+    ?.replace(/```json|```/g, "")
+    .replace(/^{|}$/g, "")
+    .trim();
+
   const chartData: Force[] =
     porters_analysis?.forces && porters_analysis.forces.length > 0
       ? porters_analysis.forces
       : [
-          { name: "Threat of New Entrants", score: 7, rating: "Medium", description: "Moderate entry barriers." },
-          { name: "Supplier Power", score: 6, rating: "Medium", description: "Suppliers have moderate leverage." },
-          { name: "Buyer Power", score: 5, rating: "Medium", description: "Buyers have moderate influence." },
-          { name: "Threat of Substitutes", score: 8, rating: "High", description: "Several substitute options." },
-          { name: "Industry Rivalry", score: 9, rating: "High", description: "Highly competitive market." },
+          { name: "Threat of New Entrants", score: 6, rating: "Medium", description: "Moderate entry barriers such as capital needs and brand loyalty." },
+          { name: "Supplier Power", score: 5, rating: "Medium", description: "Moderate supplier leverage due to Apple's global sourcing capability." },
+          { name: "Buyer Power", score: 8, rating: "High", description: "High buyer influence due to price sensitivity and multiple alternatives." },
+          { name: "Threat of Substitutes", score: 7, rating: "Medium", description: "Substitutes like Android flagships pose a steady risk." },
+          { name: "Industry Rivalry", score: 9, rating: "High", description: "Fierce competition from established brands and local players." },
         ];
 
   const COLORS = ["#2563EB", "#3B82F6", "#60A5FA", "#93C5FD", "#1E3A8A"];
 
-  // --- Clean summary text (remove braces, quotes, escape chars) ---
-  const cleanSummaryText = (raw?: string) => {
-    if (!raw) return "";
-    try {
-      // If accidentally JSON stringified, parse it
-      const maybeObj = JSON.parse(raw);
-      if (maybeObj.summary) return maybeObj.summary;
-    } catch {
-      /* ignore */
-    }
-    // remove leading “{” “}” or quotes if any
-    return raw.replace(/^["{]+|["}]+$/g, "").trim();
-  };
-
   const formatSummary = (text: string) => {
-    const clean = cleanSummaryText(text);
-    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
     const paragraphs: string[] = [];
     for (let i = 0; i < sentences.length; i += 2) {
       const paragraph = sentences.slice(i, i + 2).join(" ").trim();
@@ -140,14 +141,14 @@ export default function PorterResultsPage() {
           </p>
 
           {/* Executive Summary */}
-          {porters_analysis?.summary && (
+          {summaryText && (
             <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
                 <h2 className="text-2xl font-bold text-blue-900">Executive Summary</h2>
               </div>
               <div className="space-y-4">
-                {formatSummary(porters_analysis.summary).map((p, i) => (
+                {formatSummary(summaryText).map((p, i) => (
                   <p key={i} className="text-gray-700 leading-relaxed text-base">
                     {p}
                   </p>
