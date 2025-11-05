@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
+const showCTA = false;
+
 interface ChartDataItem {
   name: string;
   value: number;
