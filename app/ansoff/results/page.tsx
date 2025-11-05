@@ -65,36 +65,35 @@ export default function AnsoffResultsPage() {
   };
 
   const renderBulletWithBold = (text: string) => {
-    // Find the first occurrence of ** to split subtitle from content
-    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*/);
+    // Check if the line starts with **subtitle**
+    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)/s);
     
     if (subtitleMatch) {
       const subtitle = subtitleMatch[1];
-      const remainingText = text.substring(subtitleMatch[0].length).trim();
-      
-      // Remove leading colon or dash if present
-      const content = remainingText.replace(/^[:\-–—]\s*/, '');
+      const content = subtitleMatch[2].trim();
       
       // Check if subtitle already ends with colon
       const hasColon = subtitle.endsWith(':');
       
       return (
         <div className="mb-3">
-          <div className="flex items-start mb-1">
-            <span className="mr-2 text-current font-bold mt-0.5">•</span>
+          <div className="mb-1">
+            <span className="mr-2 text-current font-bold">•</span>
             <strong className="font-semibold">
               {hasColon ? subtitle : `${subtitle}:`}
             </strong>
           </div>
-          {content && <div className="ml-5 text-gray-600">{content}</div>}
+          {content && (
+            <div className="ml-5 text-gray-600 leading-relaxed">{content}</div>
+          )}
         </div>
       );
     }
     
     // If no subtitle pattern found, display as plain text with bullet
     return (
-      <div className="mb-3 flex items-start">
-        <span className="mr-2 text-current font-bold mt-0.5">•</span>
+      <div className="mb-3">
+        <span className="mr-2 text-current font-bold">•</span>
         <span>{text}</span>
       </div>
     );
