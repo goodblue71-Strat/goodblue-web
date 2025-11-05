@@ -51,24 +51,24 @@ export default function MekkoPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 relative">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-100 text-gray-800 relative">
       <Navbar showCTA={showCTA} />
 
       {/* Loading Overlay */}
       {loading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50">
           <div className="flex space-x-2 mb-4">
-            <span className="w-3 h-3 bg-cyan-600 rounded-full animate-bounce"></span>
+            <span className="w-3 h-3 bg-blue-700 rounded-full animate-bounce"></span>
             <span
-              className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce"
+              className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
               style={{ animationDelay: "0.2s" }}
             ></span>
             <span
-              className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"
+              className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"
               style={{ animationDelay: "0.4s" }}
             ></span>
           </div>
-          <p className="text-cyan-700 font-semibold text-lg">
+          <p className="text-blue-700 font-semibold text-lg">
             Generating market structure insights...
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function MekkoPage() {
 
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-gray-100 p-10 transition-all">
-          <h1 className="text-4xl font-bold mb-2 text-center text-cyan-700">
+          <h1 className="text-4xl font-bold mb-2 text-center text-blue-700">
             Market Structure (Mekko) Generator
           </h1>
           <p className="text-center text-gray-500 mb-8">
@@ -90,7 +90,7 @@ export default function MekkoPage() {
                 Market or Industry
               </label>
               <input
-                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., AI SaaS, Energy Tech"
                 value={market}
                 onChange={(e) => setMarket(e.target.value)}
@@ -104,7 +104,7 @@ export default function MekkoPage() {
                 Product or Offering
               </label>
               <input
-                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Strategy Copilot"
                 value={product}
                 onChange={(e) => setProduct(e.target.value)}
@@ -118,7 +118,7 @@ export default function MekkoPage() {
                 Focus Area (optional)
               </label>
               <input
-                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., growth, fragmentation, whitespace"
                 value={focus}
                 onChange={(e) => setFocus(e.target.value)}
@@ -131,7 +131,7 @@ export default function MekkoPage() {
                 Region (optional)
               </label>
               <input
-                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., North America, Global"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
@@ -144,7 +144,7 @@ export default function MekkoPage() {
                 Custom Prompt (optional)
               </label>
               <textarea
-                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., emphasize whitespace or high-growth subsegments"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
@@ -156,7 +156,7 @@ export default function MekkoPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 bg-cyan-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-cyan-700 disabled:bg-gray-400 transition-all"
+              className="w-full mt-2 bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-800 disabled:bg-gray-400 transition-all"
             >
               {loading ? "Analyzing..." : "Generate Market Structure (Mekko)"}
             </button>
