@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -24,6 +25,7 @@ export default function AnsoffResultsPage() {
   const [parsedAnsoff, setParsedAnsoff] = useState<ParsedAnsoff | null>(null);
   const router = useRouter();
 
+  // --- Parsing logic (unchanged) ---
   const parseAnsoffAnalysis = (analysis: string): ParsedAnsoff => {
     const parsed: ParsedAnsoff = {
       marketPenetration: [],
@@ -32,102 +34,61 @@ export default function AnsoffResultsPage() {
       diversification: [],
     };
 
-    const marketPenetrationMatch = analysis.match(/(?:\*\*)?Market Penetration(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Market Development|Product Development|Diversification)(?:\*\*)?:|\s*$)/i);
-    const marketDevelopmentMatch = analysis.match(/(?:\*\*)?Market Development(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Market Penetration|Product Development|Diversification)(?:\*\*)?:|\s*$)/i);
-    const productDevelopmentMatch = analysis.match(/(?:\*\*)?Product Development(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Market Penetration|Market Development|Diversification)(?:\*\*)?:|\s*$)/i);
-    const diversificationMatch = analysis.match(/(?:\*\*)?Diversification(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\*\*)?(?:Market Penetration|Market Development|Product Development)(?:\*\*)?:|\s*$)/i);
+    const extract = (section: string) =>
+      analysis.match(
+        new RegExp(
+          `(?:\\*\\*)?${section}(?:\\*\\*)?:?\\s*([\\s\\S]*?)(?=(?:\\*\\*)?(?:Market Penetration|Market Development|Product Development|Diversification)(?:\\*\\*)?:|$)`,
+          "i"
+        )
+      );
 
-    const extractBullets = (text: string): string[] => {
-      if (!text) return [];
-      
-      const lines = text.split('\n').map(line => line.trim());
-      const bullets: string[] = [];
-      let currentBullet = '';
-      
-      for (const line of lines) {
-        // Check if this line starts a new bullet point
-        if (line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/)) {
-          // Save the previous bullet if it exists
-          if (currentBullet) {
-            bullets.push(currentBullet.trim());
-          }
-          // Start a new bullet, removing the bullet marker
-          currentBullet = line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '');
-        } else if (line.length > 0 && currentBullet) {
-          // This is a continuation of the current bullet
-          currentBullet += ' ' + line;
-        }
-      }
-      
-      // Don't forget the last bullet
-      if (currentBullet) {
-        bullets.push(currentBullet.trim());
-      }
-      
-      return bullets.filter(b => b.length > 0);
-    };
+    const bullets = (text: string) =>
+      text
+        ?.split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l)
+        .map((l) => l.replace(/^[-*•]\s*/, ""))
+        .filter(Boolean) || [];
 
-    if (marketPenetrationMatch && marketPenetrationMatch[1]) {
-      parsed.marketPenetration = extractBullets(marketPenetrationMatch[1]);
-    }
-    if (marketDevelopmentMatch && marketDevelopmentMatch[1]) {
-      parsed.marketDevelopment = extractBullets(marketDevelopmentMatch[1]);
-    }
-    if (productDevelopmentMatch && productDevelopmentMatch[1]) {
-      parsed.productDevelopment = extractBullets(productDevelopmentMatch[1]);
-    }
-    if (diversificationMatch && diversificationMatch[1]) {
-      parsed.diversification = extractBullets(diversificationMatch[1]);
-    }
+    parsed.marketPenetration = bullets(extract("Market Penetration")?.[1] || "");
+    parsed.marketDevelopment = bullets(extract("Market Development")?.[1] || "");
+    parsed.productDevelopment = bullets(extract("Product Development")?.[1] || "");
+    parsed.diversification = bullets(extract("Diversification")?.[1] || "");
 
     return parsed;
   };
 
-  const renderBulletWithBold = (text: string) => {
-    // Check if the text starts with **subtitle**
+  const renderBullet = (text: string) => {
     const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*/);
-    
     if (subtitleMatch) {
       const subtitle = subtitleMatch[1];
-      // Extract content after the subtitle
       const content = text.substring(subtitleMatch[0].length).trim();
-      
-      // Check if subtitle already ends with colon
-      const hasColon = subtitle.endsWith(':');
-      
       return (
         <div className="mb-3">
-          <div className="mb-1">
-            <span className="mr-2 text-current font-bold">•</span>
-            <strong className="font-semibold">
-              {hasColon ? subtitle : `${subtitle}:`}
-            </strong>
+          <div className="flex items-start">
+            <span className="mr-2 text-blue-700 font-bold">•</span>
+            <div>
+              <strong className="text-gray-900">{subtitle}:</strong>{" "}
+              <span className="text-gray-700">{content}</span>
+            </div>
           </div>
-          {content && (
-            <div className="ml-5 text-gray-600 leading-relaxed">{content}</div>
-          )}
         </div>
       );
     }
-    
-    // If no subtitle pattern found, display as plain text with bullet
     return (
-      <div className="mb-3">
-        <span className="mr-2 text-current font-bold">•</span>
-        <span>{text}</span>
+      <div className="mb-3 flex items-start">
+        <span className="mr-2 text-blue-700 font-bold">•</span>
+        <span className="text-gray-700">{text}</span>
       </div>
     );
   };
 
   useEffect(() => {
-    const storedResult = sessionStorage.getItem("ansoffResult");
-    if (storedResult) {
-      const data = JSON.parse(storedResult);
+    const stored = sessionStorage.getItem("ansoffResult");
+    if (stored) {
+      const data = JSON.parse(stored);
       setResult(data);
-      const parsed = parseAnsoffAnalysis(data.ansoff_analysis);
-      console.log("Raw Ansoff Analysis:", data.ansoff_analysis);
-      console.log("Parsed Ansoff:", parsed);
-      setParsedAnsoff(parsed);
+      setParsedAnsoff(parseAnsoffAnalysis(data.ansoff_analysis));
     } else {
       router.push("/ansoff");
     }
@@ -138,9 +99,9 @@ export default function AnsoffResultsPage() {
     router.push("/ansoff");
   };
 
-  if (!result || !parsedAnsoff) {
+  if (!result || !parsedAnsoff)
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
+      <div className="min-h-screen flex flex-col bg-gray-50">
         <Navbar showCTA={false} />
         <main className="flex-grow flex items-center justify-center">
           <p className="text-gray-600">Loading...</p>
@@ -148,122 +109,148 @@ export default function AnsoffResultsPage() {
         <Footer />
       </div>
     );
-  }
+
+  // --- Color themes for each quadrant ---
+  const quadrantStyles = {
+    penetration: "from-blue-50 to-blue-100 border-blue-200 text-blue-900",
+    development: "from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-900",
+    product: "from-cyan-50 to-cyan-100 border-cyan-200 text-cyan-900",
+    diversification: "from-rose-50 to-rose-100 border-rose-200 text-rose-900",
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
       <Navbar showCTA={false} />
-      <main className="flex-grow px-4 py-8">
-        <div className="w-full max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6 text-center text-purple-700">
+
+      <main className="flex-grow px-4 py-12">
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-md p-10 border border-gray-100">
+          <h1 className="text-4xl font-bold text-center text-blue-700 mb-3">
             Ansoff Matrix Results
           </h1>
-          
-          <div className="mb-6 p-4 bg-purple-50 rounded-lg">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Analysis Details</h2>
-            <div className="space-y-1 text-gray-700">
-              <p><strong>Company:</strong> {result.company}</p>
-              <p><strong>Product:</strong> {result.product}</p>
-              <p><strong>Market:</strong> {result.market}</p>
-              <p><strong>Goal:</strong> {result.goal}</p>
-            </div>
+          <p className="text-center text-gray-500 mb-10 text-lg">
+            Strategic growth options for{" "}
+            <span className="font-semibold text-blue-700">{result.company}</span>’s{" "}
+            <span className="font-semibold text-blue-700">{result.product}</span> in{" "}
+            <span className="font-semibold text-blue-700">{result.market}</span> targeting{" "}
+            {result.goal}.
+          </p>
+
+          {/* Info Card */}
+          <div className="mb-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm p-6">
+            <h2 className="text-2xl font-bold text-blue-900 mb-3">Analysis Summary</h2>
+            <ul className="text-gray-700 space-y-1">
+              <li>
+                <strong>Company:</strong> {result.company}
+              </li>
+              <li>
+                <strong>Product:</strong> {result.product}
+              </li>
+              <li>
+                <strong>Market:</strong> {result.market}
+              </li>
+              <li>
+                <strong>Goal:</strong> {result.goal}
+              </li>
+            </ul>
           </div>
 
           {/* Ansoff Matrix Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {/* Market Penetration */}
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
-                <span className="mr-2">📊</span> Market Penetration
+            <div
+              className={`bg-gradient-to-br ${quadrantStyles.penetration} border-2 rounded-xl p-6 shadow-sm`}
+            >
+              <h3 className="text-2xl font-bold mb-3 flex items-center text-blue-800">
+                📊 Market Penetration
               </h3>
-              <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + Existing Products</p>
+              <p className="text-sm text-gray-600 mb-4 italic">
+                Existing Products × Existing Markets
+              </p>
               {parsedAnsoff.marketPenetration.length > 0 ? (
-                <div className="text-blue-900">
-                  {parsedAnsoff.marketPenetration.map((item, index) => (
-                    <div key={index}>
-                      {renderBulletWithBold(item)}
-                    </div>
-                  ))}
-                </div>
+                parsedAnsoff.marketPenetration.map((t, i) => (
+                  <div key={i}>{renderBullet(t)}</div>
+                ))
               ) : (
-                <p className="text-gray-500 italic">No strategies found</p>
+                <p className="text-gray-500 italic">No strategies identified.</p>
               )}
             </div>
 
             {/* Market Development */}
-            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center">
-                <span className="mr-2">🌍</span> Market Development
+            <div
+              className={`bg-gradient-to-br ${quadrantStyles.development} border-2 rounded-xl p-6 shadow-sm`}
+            >
+              <h3 className="text-2xl font-bold mb-3 flex items-center text-indigo-800">
+                🌍 Market Development
               </h3>
-              <p className="text-sm text-gray-600 mb-3 italic">New Markets + Existing Products</p>
+              <p className="text-sm text-gray-600 mb-4 italic">
+                Existing Products × New Markets
+              </p>
               {parsedAnsoff.marketDevelopment.length > 0 ? (
-                <div className="text-green-900">
-                  {parsedAnsoff.marketDevelopment.map((item, index) => (
-                    <div key={index}>
-                      {renderBulletWithBold(item)}
-                    </div>
-                  ))}
-                </div>
+                parsedAnsoff.marketDevelopment.map((t, i) => (
+                  <div key={i}>{renderBullet(t)}</div>
+                ))
               ) : (
-                <p className="text-gray-500 italic">No strategies found</p>
+                <p className="text-gray-500 italic">No strategies identified.</p>
               )}
             </div>
 
             {/* Product Development */}
-            <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-orange-800 mb-4 flex items-center">
-                <span className="mr-2">🚀</span> Product Development
+            <div
+              className={`bg-gradient-to-br ${quadrantStyles.product} border-2 rounded-xl p-6 shadow-sm`}
+            >
+              <h3 className="text-2xl font-bold mb-3 flex items-center text-cyan-800">
+                🚀 Product Development
               </h3>
-              <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + New Products</p>
+              <p className="text-sm text-gray-600 mb-4 italic">
+                New Products × Existing Markets
+              </p>
               {parsedAnsoff.productDevelopment.length > 0 ? (
-                <div className="text-orange-900">
-                  {parsedAnsoff.productDevelopment.map((item, index) => (
-                    <div key={index}>
-                      {renderBulletWithBold(item)}
-                    </div>
-                  ))}
-                </div>
+                parsedAnsoff.productDevelopment.map((t, i) => (
+                  <div key={i}>{renderBullet(t)}</div>
+                ))
               ) : (
-                <p className="text-gray-500 italic">No strategies found</p>
+                <p className="text-gray-500 italic">No strategies identified.</p>
               )}
             </div>
 
             {/* Diversification */}
-            <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center">
-                <span className="mr-2">🎯</span> Diversification
+            <div
+              className={`bg-gradient-to-br ${quadrantStyles.diversification} border-2 rounded-xl p-6 shadow-sm`}
+            >
+              <h3 className="text-2xl font-bold mb-3 flex items-center text-rose-800">
+                🎯 Diversification
               </h3>
-              <p className="text-sm text-gray-600 mb-3 italic">New Markets + New Products</p>
+              <p className="text-sm text-gray-600 mb-4 italic">
+                New Products × New Markets
+              </p>
               {parsedAnsoff.diversification.length > 0 ? (
-                <div className="text-red-900">
-                  {parsedAnsoff.diversification.map((item, index) => (
-                    <div key={index}>
-                      {renderBulletWithBold(item)}
-                    </div>
-                  ))}
-                </div>
+                parsedAnsoff.diversification.map((t, i) => (
+                  <div key={i}>{renderBullet(t)}</div>
+                ))
               ) : (
-                <p className="text-gray-500 italic">No strategies found</p>
+                <p className="text-gray-500 italic">No strategies identified.</p>
               )}
             </div>
           </div>
 
-          <div className="flex gap-4">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={handleNewAnalysis}
-              className="flex-1 bg-purple-600 text-white font-semibold py-3 rounded-lg hover:bg-purple-700 transition-colors"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all"
             >
-              Create New Analysis
+              🔁 New Analysis
             </button>
             <button
               onClick={() => window.print()}
-              className="flex-1 bg-gray-600 text-white font-semibold py-3 rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex-1 bg-gray-700 text-white font-semibold py-3 rounded-full shadow-lg hover:bg-gray-800 transition-all"
             >
-              Print Results
+              🖨️ Print / Save PDF
             </button>
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );
