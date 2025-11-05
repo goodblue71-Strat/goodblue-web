@@ -107,9 +107,12 @@ export default function AnsoffResultsPage() {
 
           {/* Recommended Path */}
           {recommendation && (
-            <div className="mb-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
-              <h2 className="text-2xl font-bold mb-2">💡 Recommended Growth Path</h2>
-              <p className="text-white/90 leading-relaxed">{recommendation}</p>
+            <div className="mb-10 p-8 bg-gradient-to-br from-sky-50 to-cyan-50 rounded-xl border border-sky-200 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-8 bg-sky-600 rounded-full"></div>
+              <h2 className="text-2xl font-bold text-sky-900">💡 Recommended Growth Path</h2>
+              </div>
+              <p className="ext-gray-700 text-base leading-relaxed">{recommendation}</p>
             </div>
           )}
 
