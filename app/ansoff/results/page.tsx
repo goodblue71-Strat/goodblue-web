@@ -46,9 +46,9 @@ export default function AnsoffResultsPage() {
 
   const quadrants = [
     { title: "📊 Market Penetration", key: "marketPenetration", color: "from-blue-50 to-blue-100 border-blue-200 text-blue-900", desc: "Existing Products × Existing Markets" },
-    { title: "🌍 Market Development", key: "marketDevelopment", color: "from-green-50 to-green-100 border-green-200 text-green-900", desc: "Existing Products × New Markets" },
-    { title: "🚀 Product Development", key: "productDevelopment", color: "from-orange-50 to-orange-100 border-orange-200 text-orange-900", desc: "New Products × Existing Markets" },
-    { title: "🎯 Diversification", key: "diversification", color: "from-rose-50 to-rose-100 border-rose-200 text-rose-900", desc: "New Products × New Markets" },
+    { title: "🌍 Market Development", key: "marketDevelopment", color: "from-blue-50 to-blue-100 border-blue-200 text-blue-900", desc: "Existing Products × New Markets" },
+    { title: "🚀 Product Development", key: "productDevelopment", color: "from-blue-50 to-blue-100 border-blue-200 text-blue-900", desc: "New Products × Existing Markets" },
+    { title: "🎯 Diversification", key: "diversification", color: "from-blue-50 to-blue-100 border-blue-200 text-blue-900", desc: "New Products × New Markets" },
   ];
 
   return (
