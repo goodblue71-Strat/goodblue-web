@@ -38,7 +38,7 @@ export default function TAMResultsPage() {
   const [result, setResult] = useState<TAMResult | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const showCTA = pathname !== "/tam" && pathname !== "/app/tam";
+  const showCTA = false;
 
   useEffect(() => {
     const stored = sessionStorage.getItem("tamResult");
