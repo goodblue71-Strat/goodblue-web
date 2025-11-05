@@ -51,8 +51,28 @@ export default function MekkoPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50 text-gray-800 relative">
       <Navbar showCTA={showCTA} />
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50">
+          <div className="flex space-x-2 mb-4">
+            <span className="w-3 h-3 bg-cyan-600 rounded-full animate-bounce"></span>
+            <span
+              className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce"
+              style={{ animationDelay: "0.2s" }}
+            ></span>
+            <span
+              className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.4s" }}
+            ></span>
+          </div>
+          <p className="text-cyan-700 font-semibold text-lg">
+            Generating market structure insights...
+          </p>
+        </div>
+      )}
 
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-gray-100 p-10 transition-all">
@@ -60,7 +80,7 @@ export default function MekkoPage() {
             Market Structure (Mekko) Generator
           </h1>
           <p className="text-center text-gray-500 mb-8">
-            Visualize market segments, growth, and competitive whitespace
+            Visualize industry segments, growth rates, and whitespace opportunities
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -125,7 +145,7 @@ export default function MekkoPage() {
               </label>
               <textarea
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                placeholder="e.g., emphasize segments with >20% CAGR or whitespace for new entrants"
+                placeholder="e.g., emphasize whitespace or high-growth subsegments"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={3}
