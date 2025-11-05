@@ -6,7 +6,7 @@ const frameworks = [
   { name: "Ansoff Matrix", path: "/ansoff" },
   { name: "TAM / SAM / SOM", path: "/tam" },
   { name: "Porter's 5 forces", path: "/porters" },
-  { name: "Benchmarking", path: "/notready" },
+  { name: "Mekko Market Analysis", path: "/mekko" },
   { name: "Roadmaps", path: "/notready" },
   { name: "KPI Tree", path: "/notready" },
   { name: "Scenario", path: "/notready" },
