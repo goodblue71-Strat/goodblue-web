@@ -60,11 +60,6 @@ export default function TAMResultsPage() {
 
   const COLORS = ["#93C5FD", "#3B82F6", "#1E40AF"];
 
-  // Custom label to show percentages
-  const renderLabel = (entry: ChartDataItem) => {
-    return `${entry.name}`;
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
       <Navbar showCTA={showCTA} />
@@ -151,7 +146,7 @@ export default function TAMResultsPage() {
                     cx="50%"
                     cy="50%"
                     outerRadius={130}
-                    label={renderLabel}
+                    label={(props: any) => props.name}
                     labelLine={false}
                   >
                     {chartData.map((entry: ChartDataItem, index: number) => (
