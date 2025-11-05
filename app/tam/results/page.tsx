@@ -6,8 +6,33 @@ import Footer from "@/components/Footer";
 import { usePathname, useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
+// Add these interfaces
+interface ChartDataItem {
+  name: string;
+  value: number;
+}
+
+interface TableRow {
+  layer: string;
+  value: string;
+  assumptions: string;
+}
+
+interface TAMResult {
+  company: string;
+  product: string;
+  industry: string;
+  region: string;
+  segment: string;
+  tam_sam_som_analysis?: {
+    data?: ChartDataItem[];
+    summary?: string;
+    table?: TableRow[];
+  };
+}
+
 export default function TAMResultsPage() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<TAMResult | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const showCTA = pathname !== "/tam" && pathname !== "/app/tam";
@@ -26,8 +51,8 @@ export default function TAMResultsPage() {
 
   const { company, product, industry, region, segment, tam_sam_som_analysis } = result;
 
-  // Fallback in case the API doesn’t return structured data yet
-  const chartData =
+  // Fallback in case the API doesn't return structured data yet
+  const chartData: ChartDataItem[] =
     tam_sam_som_analysis?.data || [
       { name: "TAM", value: 100 },
       { name: "SAM", value: 20 },
@@ -66,7 +91,7 @@ export default function TAMResultsPage() {
                   fill="#8884d8"
                   label={({ name, value }) => `${name}: ${value}`}
                 >
-                  {chartData.map((entry, index) => (
+                  {chartData.map((entry: ChartDataItem, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -100,7 +125,7 @@ export default function TAMResultsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {tam_sam_som_analysis.table.map((row: any, i: number) => (
+                    {tam_sam_som_analysis.table.map((row: TableRow, i: number) => (
                       <tr
                         key={i}
                         className="border-t border-gray-200 hover:bg-gray-50 transition-colors"
