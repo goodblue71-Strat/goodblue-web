@@ -98,3 +98,26 @@ export async function generateTAM({
 
   return await response.json();
 }
+export async function generatePorter({
+  company,
+  product,
+  industry,
+  region,
+  prompt,
+}: {
+  company: string;
+  product: string;
+  industry: string;
+  region: string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${API_BASE}/app/porters`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ company, product, industry, region, prompt }),
+  });
+
+  if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+  return await response.json();
+}
