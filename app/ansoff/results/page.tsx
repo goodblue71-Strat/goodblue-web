@@ -66,11 +66,16 @@ export default function AnsoffResultsPage() {
 
   const renderBulletWithBold = (text: string) => {
     // Check if the line starts with **subtitle**
-    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)/s);
+    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?[\s\S]*/);
     
     if (subtitleMatch) {
       const subtitle = subtitleMatch[1];
-      const content = subtitleMatch[2].trim();
+      // Find where the subtitle ends and extract everything after it
+      const subtitleEnd = text.indexOf('**', 2) + 2;
+      let content = text.substring(subtitleEnd).trim();
+      
+      // Remove leading colon if present
+      content = content.replace(/^:\s*/, '');
       
       // Check if subtitle already ends with colon
       const hasColon = subtitle.endsWith(':');
