@@ -20,6 +20,7 @@ interface Force {
   score: number;
   rating?: string;
   description?: string;
+  [key: string]: any;
 }
 
 interface PorterResult {
@@ -42,7 +43,31 @@ export default function PorterResultsPage() {
   useEffect(() => {
     const stored = sessionStorage.getItem("porterResult");
     if (stored) {
-      setResult(JSON.parse(stored));
+      let parsed = JSON.parse(stored);
+
+      // --- Clean summary if JSON string was stored ---
+      try {
+        if (
+          typeof parsed.porters_analysis === "string" &&
+          parsed.porters_analysis.startsWith("{")
+        ) {
+          parsed.porters_analysis = JSON.parse(parsed.porters_analysis);
+        }
+      } catch {
+        // leave as-is
+      }
+
+      // --- Normalize force fields (drivers → description, intensity → rating) ---
+      if (parsed.porters_analysis?.forces) {
+        parsed.porters_analysis.forces = parsed.porters_analysis.forces.map((f: any) => ({
+          name: f.name || "Unnamed Force",
+          score: f.score ?? 0,
+          rating: f.intensity || f.rating || (f.score >= 8 ? "High" : f.score >= 5 ? "Medium" : "Low"),
+          description: f.drivers || f.description || "",
+        }));
+      }
+
+      setResult(parsed);
     } else {
       router.push("/porters");
     }
@@ -53,18 +78,35 @@ export default function PorterResultsPage() {
   const { company, product, industry, region, porters_analysis } = result;
 
   const chartData: Force[] =
-    porters_analysis?.forces || [
-      { name: "Threat of New Entrants", score: 7 },
-      { name: "Supplier Power", score: 6 },
-      { name: "Buyer Power", score: 5 },
-      { name: "Threat of Substitutes", score: 8 },
-      { name: "Industry Rivalry", score: 9 },
-    ];
+    porters_analysis?.forces && porters_analysis.forces.length > 0
+      ? porters_analysis.forces
+      : [
+          { name: "Threat of New Entrants", score: 7, rating: "Medium", description: "Moderate entry barriers." },
+          { name: "Supplier Power", score: 6, rating: "Medium", description: "Suppliers have moderate leverage." },
+          { name: "Buyer Power", score: 5, rating: "Medium", description: "Buyers have moderate influence." },
+          { name: "Threat of Substitutes", score: 8, rating: "High", description: "Several substitute options." },
+          { name: "Industry Rivalry", score: 9, rating: "High", description: "Highly competitive market." },
+        ];
 
   const COLORS = ["#2563EB", "#3B82F6", "#60A5FA", "#93C5FD", "#1E3A8A"];
 
+  // --- Clean summary text (remove braces, quotes, escape chars) ---
+  const cleanSummaryText = (raw?: string) => {
+    if (!raw) return "";
+    try {
+      // If accidentally JSON stringified, parse it
+      const maybeObj = JSON.parse(raw);
+      if (maybeObj.summary) return maybeObj.summary;
+    } catch {
+      /* ignore */
+    }
+    // remove leading “{” “}” or quotes if any
+    return raw.replace(/^["{]+|["}]+$/g, "").trim();
+  };
+
   const formatSummary = (text: string) => {
-    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const clean = cleanSummaryText(text);
+    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
     const paragraphs: string[] = [];
     for (let i = 0; i < sentences.length; i += 2) {
       const paragraph = sentences.slice(i, i + 2).join(" ").trim();
@@ -128,18 +170,16 @@ export default function PorterResultsPage() {
                   {force.name}
                 </h3>
                 <p className="text-sm text-gray-600 mb-1">
-                  <span className="font-semibold">Rating:</span>{" "}
-                  {force.rating || (force.score >= 8 ? "High" : force.score >= 5 ? "Medium" : "Low")}
+                  <span className="font-semibold">Rating:</span> {force.rating}
                 </p>
-                <p className="text-sm text-gray-500">
-                  {force.description ||
-                    "No description provided. The model will generate detailed insights when available."}
+                <p className="text-sm text-gray-500 leading-relaxed whitespace-pre-line">
+                  {force.description || "No description available."}
                 </p>
               </div>
             ))}
           </div>
 
-          {/* Radar Chart Visualization */}
+          {/* Radar Chart */}
           <div className="mb-10">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
               Competitive Pressure Radar
