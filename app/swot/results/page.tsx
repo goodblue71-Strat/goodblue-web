@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+const showCTA = false;
+
 interface SWOTResult {
   company: string;
   product: string;
