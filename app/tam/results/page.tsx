@@ -64,7 +64,7 @@ export default function TAMResultsPage() {
   const renderCustomLabel = (props: any) => {
     const { cx, cy, midAngle, outerRadius, name, value } = props;
     const RADIAN = Math.PI / 180;
-    const radius = outerRadius + 30; // Position outside the pie
+    const radius = outerRadius + 30;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -80,6 +80,21 @@ export default function TAMResultsPage() {
         {`${name}: $${value}B`}
       </text>
     );
+  };
+
+  // Format summary into paragraphs by splitting on sentence boundaries
+  const formatSummary = (text: string) => {
+    // Split into sentences
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    
+    // Group sentences into paragraphs (2-3 sentences per paragraph)
+    const paragraphs: string[] = [];
+    for (let i = 0; i < sentences.length; i += 2) {
+      const paragraph = sentences.slice(i, i + 2).join(' ').trim();
+      if (paragraph) paragraphs.push(paragraph);
+    }
+    
+    return paragraphs;
   };
 
   return (
@@ -107,11 +122,18 @@ export default function TAMResultsPage() {
 
           {/* Summary Section */}
           {tam_sam_som_analysis?.summary && (
-            <div className="mb-10 p-6 bg-blue-50 rounded-xl border border-blue-100">
-              <h2 className="text-xl font-bold text-blue-900 mb-3">Executive Summary</h2>
-              <p className="text-gray-700 leading-relaxed">
-                {tam_sam_som_analysis.summary}
-              </p>
+            <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                <h2 className="text-2xl font-bold text-blue-900">Executive Summary</h2>
+              </div>
+              <div className="space-y-4">
+                {formatSummary(tam_sam_som_analysis.summary).map((paragraph, index) => (
+                  <p key={index} className="text-gray-700 leading-relaxed text-base">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
 
@@ -205,7 +227,7 @@ export default function TAMResultsPage() {
                 {chartData.map((item: ChartDataItem, index: number) => (
                   <div 
                     key={index} 
-                    className="p-4 rounded-lg border-l-4"
+                    className="p-4 rounded-lg border-l-4 bg-white shadow-sm"
                     style={{ borderColor: COLORS[index % COLORS.length] }}
                   >
                     <h3 className="font-bold text-lg mb-2" style={{ color: COLORS[index % COLORS.length] }}>
