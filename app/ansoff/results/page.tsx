@@ -40,12 +40,31 @@ export default function AnsoffResultsPage() {
     const extractBullets = (text: string): string[] => {
       if (!text) return [];
       
-      return text
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/))
-        .map(line => line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '').trim())
-        .filter(line => line.length > 0);
+      const lines = text.split('\n').map(line => line.trim());
+      const bullets: string[] = [];
+      let currentBullet = '';
+      
+      for (const line of lines) {
+        // Check if this line starts a new bullet point
+        if (line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/)) {
+          // Save the previous bullet if it exists
+          if (currentBullet) {
+            bullets.push(currentBullet.trim());
+          }
+          // Start a new bullet, removing the bullet marker
+          currentBullet = line.replace(/^[-*•]\s+/, '').replace(/^\d+\.\s+/, '');
+        } else if (line.length > 0 && currentBullet) {
+          // This is a continuation of the current bullet
+          currentBullet += ' ' + line;
+        }
+      }
+      
+      // Don't forget the last bullet
+      if (currentBullet) {
+        bullets.push(currentBullet.trim());
+      }
+      
+      return bullets.filter(b => b.length > 0);
     };
 
     if (marketPenetrationMatch && marketPenetrationMatch[1]) {
@@ -65,17 +84,13 @@ export default function AnsoffResultsPage() {
   };
 
   const renderBulletWithBold = (text: string) => {
-    // Check if the line starts with **subtitle**
-    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?[\s\S]*/);
+    // Check if the text starts with **subtitle**
+    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*/);
     
     if (subtitleMatch) {
       const subtitle = subtitleMatch[1];
-      // Find where the subtitle ends and extract everything after it
-      const subtitleEnd = text.indexOf('**', 2) + 2;
-      let content = text.substring(subtitleEnd).trim();
-      
-      // Remove leading colon if present
-      content = content.replace(/^:\s*/, '');
+      // Extract content after the subtitle
+      const content = text.substring(subtitleMatch[0].length).trim();
       
       // Check if subtitle already ends with colon
       const hasColon = subtitle.endsWith(':');
