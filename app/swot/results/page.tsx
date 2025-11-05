@@ -230,31 +230,6 @@ export default function SWOTResultsPage() {
               </p>
             </div>
           )}
-
-          {/* --- Overview --- */}
-          <div className="mb-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-blue-900">Overview</h2>
-            </div>
-            <div className="text-gray-700 space-y-1 leading-relaxed">
-              <p>
-                <strong>Company:</strong> {result.company}
-              </p>
-              <p>
-                <strong>Product:</strong> {result.product}
-              </p>
-              {result.feature && (
-                <p>
-                  <strong>Feature:</strong> {result.feature}
-                </p>
-              )}
-              <p>
-                <strong>Goal:</strong> {result.goal}
-              </p>
-            </div>
-          </div>
-
           {/* --- SWOT Quadrants --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {sections.map((s, idx) => (
