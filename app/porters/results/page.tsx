@@ -15,6 +15,8 @@ import {
   Legend,
 } from "recharts";
 
+const showCTA = false;
+
 interface Force {
   name: string;
   score: number;
