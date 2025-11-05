@@ -121,3 +121,36 @@ export async function generatePorter({
   if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
   return await response.json();
 }
+export async function generateMekko({
+  market,
+  product,
+  focus,
+  region,
+  prompt,
+}: {
+  market: string;
+  product: string;
+  focus?: string;
+  region?: string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+  const response = await fetch(`${API_BASE}/app/mekko`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      market,
+      product,
+      focus,
+      region,
+      prompt,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}
