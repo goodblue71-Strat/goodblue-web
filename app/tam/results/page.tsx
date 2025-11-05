@@ -60,11 +60,11 @@ export default function TAMResultsPage() {
 
   const COLORS = ["#93C5FD", "#3B82F6", "#1E40AF"];
 
-  // Custom label renderer showing name and value
+  // Custom label renderer - positioned outside with smaller font
   const renderCustomLabel = (props: any) => {
-    const { cx, cy, midAngle, innerRadius, outerRadius, name, value } = props;
+    const { cx, cy, midAngle, outerRadius, name, value } = props;
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = outerRadius + 30; // Position outside the pie
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -72,10 +72,10 @@ export default function TAMResultsPage() {
       <text
         x={x}
         y={y}
-        fill="white"
+        fill="#374151"
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
-        className="font-bold"
+        style={{ fontSize: "14px", fontWeight: "500" }}
       >
         {`${name}: $${value}B`}
       </text>
@@ -158,8 +158,8 @@ export default function TAMResultsPage() {
             <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
               Market Visualization
             </h2>
-            <div className="w-full h-96 bg-gray-50 rounded-xl p-6">
-              <ResponsiveContainer>
+            <div className="w-full h-96 bg-gray-50 rounded-xl p-6 flex flex-col items-center">
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={chartData}
@@ -167,9 +167,9 @@ export default function TAMResultsPage() {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={130}
+                    outerRadius={110}
                     label={renderCustomLabel}
-                    labelLine={false}
+                    labelLine={true}
                   >
                     {chartData.map((entry: ChartDataItem, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -185,14 +185,15 @@ export default function TAMResultsPage() {
                   />
                   <Legend 
                     verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value) => <span className="font-medium">{value}</span>}
+                    height={50}
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    formatter={(value) => <span className="font-medium text-sm">{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-center text-base font-medium text-gray-700 mt-3 bg-blue-50 inline-block px-4 py-2 rounded-lg mx-auto block w-fit">
-              💰 All values shown in Billions (USD)
+            <p className="text-center text-sm text-gray-600 mt-2">
+              All values shown in Billions (USD)
             </p>
           </div>
 
