@@ -10,7 +10,7 @@ interface SWOTResult {
   product: string;
   goal: string;
   feature?: string;
-  swot_analysis: string;
+  swot_analysis: string | object;
 }
 
 interface ParsedSWOT {
@@ -27,8 +27,8 @@ export default function SWOTResultsPage() {
   const [parsedSWOT, setParsedSWOT] = useState<ParsedSWOT | null>(null);
   const router = useRouter();
 
-  // --- Parsing logic ---
-  const parseSWOTAnalysis = (analysis: string): ParsedSWOT => {
+  // --- Flexible parser: handles JSON and text formats ---
+  const parseSWOTAnalysis = (analysis: string | object): ParsedSWOT => {
     const parsed: ParsedSWOT = {
       strengths: [],
       weaknesses: [],
@@ -38,18 +38,37 @@ export default function SWOTResultsPage() {
       recommendation: "",
     };
 
-    // Try to extract summary/recommendation if JSON-like
-    try {
-      const json = JSON.parse(analysis);
-      if (json.summary || json.recommendation || json.strengths) return json;
-    } catch {
-      // continue with text parsing
+    // --- Case 1: Object already parsed ---
+    if (typeof analysis === "object") {
+      const data = analysis as any;
+      parsed.summary = data.summary || "";
+      parsed.recommendation = data.recommendation || "";
+      parsed.strengths = data.strengths || [];
+      parsed.weaknesses = data.weaknesses || [];
+      parsed.opportunities = data.opportunities || [];
+      parsed.threats = data.threats || [];
+      return parsed;
     }
 
+    // --- Case 2: Try to parse JSON string ---
+    try {
+      const data = JSON.parse(analysis);
+      parsed.summary = data.summary || "";
+      parsed.recommendation = data.recommendation || "";
+      parsed.strengths = data.strengths || [];
+      parsed.weaknesses = data.weaknesses || [];
+      parsed.opportunities = data.opportunities || [];
+      parsed.threats = data.threats || [];
+      return parsed;
+    } catch {
+      // continue with regex parsing
+    }
+
+    // --- Case 3: Regex fallback for plain text output ---
     const extract = (section: string) =>
       analysis.match(
         new RegExp(
-          `(?:\\*\\*)?${section}(?:\\*\\*)?:?\\s*([\\s\\S]*?)(?=(?:\\*\\*)?(?:Strengths?|Weaknesses?|Opportunities?|Threats?|Key Takeaway|Recommendation)(?:\\*\\*)?:|$)`,
+          `(?:\\*\\*)?${section}(?:\\*\\*)?:?\\s*([\\s\\S]*?)(?=(?:\\*\\*)?(?:Strengths?|Weaknesses?|Opportunities?|Threats?|Summary|Recommendation)(?:\\*\\*)?:|$)`,
           "i"
         )
       );
@@ -60,8 +79,7 @@ export default function SWOTResultsPage() {
         .split("\n")
         .map((line) => line.trim())
         .filter(
-          (line) =>
-            line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/)
+          (line) => line.match(/^[-*•]\s+/) || line.match(/^\d+\.\s+/)
         )
         .map((line) =>
           line.replace(/^[-*•]\s+/, "").replace(/^\d+\.\s+/, "").trim()
@@ -69,8 +87,12 @@ export default function SWOTResultsPage() {
         .filter((line) => line.length > 0);
     };
 
-    const summaryMatch = analysis.match(/(?:\*\*)?(?:Summary|Key Takeaway)(?:\*\*)?:?\s*([\s\S]*?)(?=\*\*|Strengths?|Weaknesses?|Opportunities?|Threats?|$)/i);
-    const recMatch = analysis.match(/(?:\*\*)?(?:Recommendation|Action Plan)(?:\*\*)?:?\s*([\s\S]*)/i);
+    const summaryMatch = analysis.match(
+      /(?:\*\*)?(?:Summary|Key Takeaway)(?:\*\*)?:?\s*([\s\S]*?)(?=\*\*|Strengths?|Weaknesses?|Opportunities?|Threats?|$)/i
+    );
+    const recMatch = analysis.match(
+      /(?:\*\*)?(?:Recommendation|Action Plan)(?:\*\*)?:?\s*([\s\S]*)/i
+    );
 
     parsed.summary = summaryMatch?.[1]?.trim() || "";
     parsed.recommendation = recMatch?.[1]?.trim() || "";
@@ -88,12 +110,13 @@ export default function SWOTResultsPage() {
     return parsed;
   };
 
-  // --- Bold text renderer ---
+  // --- Render bold text inside bullets ---
   const renderBulletWithBold = (text: string) => {
     const regex = /\*\*([^*]+)\*\*/g;
     const parts: React.ReactNode[] = [];
     let lastIndex = 0;
     let match;
+
     while ((match = regex.exec(text)) !== null) {
       if (match.index > lastIndex) {
         parts.push(
@@ -119,7 +142,7 @@ export default function SWOTResultsPage() {
     return parts;
   };
 
-  // --- Load data ---
+  // --- Load result from session ---
   useEffect(() => {
     const stored = sessionStorage.getItem("swotResult");
     if (stored) {
@@ -148,6 +171,7 @@ export default function SWOTResultsPage() {
     );
   }
 
+  // --- Section color mapping ---
   const sections = [
     {
       title: "💪 Strengths",
@@ -192,12 +216,14 @@ export default function SWOTResultsPage() {
             <strong className="text-blue-700">{result.goal}</strong>.
           </p>
 
-          {/* 🔹 Top Key Takeaway */}
+          {/* --- Key Takeaway --- */}
           {parsedSWOT.summary && (
             <div className="mb-10 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
-                <h2 className="text-2xl font-bold text-blue-900">Key Takeaway</h2>
+                <h2 className="text-2xl font-bold text-blue-900">
+                  Key Takeaway
+                </h2>
               </div>
               <p className="text-gray-700 text-base leading-relaxed">
                 {parsedSWOT.summary}
@@ -205,7 +231,7 @@ export default function SWOTResultsPage() {
             </div>
           )}
 
-          {/* Overview */}
+          {/* --- Overview --- */}
           <div className="mb-10 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
@@ -229,7 +255,7 @@ export default function SWOTResultsPage() {
             </div>
           </div>
 
-          {/* SWOT Quadrants */}
+          {/* --- SWOT Quadrants --- */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
             {sections.map((s, idx) => (
               <div
@@ -252,7 +278,7 @@ export default function SWOTResultsPage() {
             ))}
           </div>
 
-          {/* 🔹 Bottom Recommendation */}
+          {/* --- Strategic Recommendation --- */}
           {parsedSWOT.recommendation && (
             <div className="mb-10 p-8 bg-gradient-to-br from-sky-50 to-cyan-50 rounded-xl border border-sky-200 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
@@ -267,7 +293,7 @@ export default function SWOTResultsPage() {
             </div>
           )}
 
-          {/* Buttons */}
+          {/* --- Action Buttons --- */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={handleNewAnalysis}
