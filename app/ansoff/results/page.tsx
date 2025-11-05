@@ -65,38 +65,34 @@ export default function AnsoffResultsPage() {
   };
 
   const renderBulletWithBold = (text: string) => {
-    const parts: React.ReactNode[] = [];
-    let currentIndex = 0;
-    const regex = /\*\*([^*]+)\*\*/g;
-    let match;
-
-    while ((match = regex.exec(text)) !== null) {
-      if (match.index > currentIndex) {
-        parts.push(
-          <span key={`text-${currentIndex}`}>
-            {text.substring(currentIndex, match.index)}
-          </span>
-        );
-      }
-      
-      parts.push(
-        <strong key={`bold-${match.index}`} className="font-semibold">
-          {match[1]}
-        </strong>
-      );
-      
-      currentIndex = match.index + match[0].length;
-    }
+    // Find the first occurrence of ** to split subtitle from content
+    const subtitleMatch = text.match(/^\*\*([^*]+)\*\*/);
     
-    if (currentIndex < text.length) {
-      parts.push(
-        <span key={`text-${currentIndex}`}>
-          {text.substring(currentIndex)}
-        </span>
+    if (subtitleMatch) {
+      const subtitle = subtitleMatch[1];
+      const remainingText = text.substring(subtitleMatch[0].length).trim();
+      
+      // Remove leading colon or dash if present
+      const content = remainingText.replace(/^[:\-–—]\s*/, '');
+      
+      return (
+        <div>
+          <div className="flex items-start mb-1">
+            <span className="mr-2 text-current font-bold mt-0.5">•</span>
+            <strong className="font-semibold">{subtitle}:</strong>
+          </div>
+          {content && <div className="ml-5 text-gray-600">{content}</div>}
+        </div>
       );
     }
     
-    return parts.length > 0 ? parts : text;
+    // If no subtitle pattern found, display as plain text with bullet
+    return (
+      <div className="flex items-start">
+        <span className="mr-2 text-current font-bold mt-0.5">•</span>
+        <span>{text}</span>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -158,14 +154,13 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + Existing Products</p>
               {parsedAnsoff.marketPenetration.length > 0 ? (
-                <ul className="space-y-3">
+                <div className="space-y-3 text-blue-900">
                   {parsedAnsoff.marketPenetration.map((item, index) => (
-                    <li key={index} className="text-gray-700 flex items-start">
-                      <span className="mr-2 text-blue-600 font-bold mt-0.5">•</span>
-                      <span className="flex-1">{renderBulletWithBold(item)}</span>
-                    </li>
+                    <div key={index}>
+                      {renderBulletWithBold(item)}
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p className="text-gray-500 italic">No strategies found</p>
               )}
@@ -178,14 +173,13 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">New Markets + Existing Products</p>
               {parsedAnsoff.marketDevelopment.length > 0 ? (
-                <ul className="space-y-3">
+                <div className="space-y-3 text-green-900">
                   {parsedAnsoff.marketDevelopment.map((item, index) => (
-                    <li key={index} className="text-gray-700 flex items-start">
-                      <span className="mr-2 text-green-600 font-bold mt-0.5">•</span>
-                      <span className="flex-1">{renderBulletWithBold(item)}</span>
-                    </li>
+                    <div key={index}>
+                      {renderBulletWithBold(item)}
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p className="text-gray-500 italic">No strategies found</p>
               )}
@@ -198,14 +192,13 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">Existing Markets + New Products</p>
               {parsedAnsoff.productDevelopment.length > 0 ? (
-                <ul className="space-y-3">
+                <div className="space-y-3 text-orange-900">
                   {parsedAnsoff.productDevelopment.map((item, index) => (
-                    <li key={index} className="text-gray-700 flex items-start">
-                      <span className="mr-2 text-orange-600 font-bold mt-0.5">•</span>
-                      <span className="flex-1">{renderBulletWithBold(item)}</span>
-                    </li>
+                    <div key={index}>
+                      {renderBulletWithBold(item)}
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p className="text-gray-500 italic">No strategies found</p>
               )}
@@ -218,14 +211,13 @@ export default function AnsoffResultsPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3 italic">New Markets + New Products</p>
               {parsedAnsoff.diversification.length > 0 ? (
-                <ul className="space-y-3">
+                <div className="space-y-3 text-red-900">
                   {parsedAnsoff.diversification.map((item, index) => (
-                    <li key={index} className="text-gray-700 flex items-start">
-                      <span className="mr-2 text-red-600 font-bold mt-0.5">•</span>
-                      <span className="flex-1">{renderBulletWithBold(item)}</span>
-                    </li>
+                    <div key={index}>
+                      {renderBulletWithBold(item)}
+                    </div>
                   ))}
-                </ul>
+                </div>
               ) : (
                 <p className="text-gray-500 italic">No strategies found</p>
               )}
