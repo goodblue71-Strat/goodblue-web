@@ -101,3 +101,23 @@ export default function MekkoPage() {
               className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               placeholder="Optional custom prompt (e.g., focus on fragmented segments or whitespace)"
               value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              rows={3}
+            ></textarea>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-cyan-600 text-white font-semibold py-3 rounded-lg hover:bg-cyan-700 disabled:bg-gray-400 transition-colors"
+            >
+              {loading ? "Analyzing..." : "Generate Market Structure (Mekko)"}
+            </button>
+          </form>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
