@@ -7,8 +7,9 @@ import Footer from "@/components/Footer";
 import { generateBlueOcean } from "../../lib/api";
 
 export default function BlueOceanPage() {
+  const [company, setCompany] = useState("");
   const [industry, setIndustry] = useState("");
-  const [customer, setCustomer] = useState("");
+  const [customerSegment, setCustomerSegment] = useState("");
   const [alternatives, setAlternatives] = useState("");
   const [valueFocus, setValueFocus] = useState("");
   const [prompt, setPrompt] = useState("");
@@ -24,21 +25,23 @@ export default function BlueOceanPage() {
 
     try {
       const data = await generateBlueOcean({
+        company,
         industry,
-        customer,
-        alternatives: alternatives || undefined,
-        valueFocus: valueFocus || undefined,
+        customerSegment,
+        blockers: alternatives || undefined,
+        valueProposition: valueFocus || undefined,
         prompt: prompt || undefined,
       });
 
       sessionStorage.setItem(
         "blueoceanResult",
         JSON.stringify({
+          company,
           industry,
-          customer,
+          customerSegment,
           alternatives,
           valueFocus,
-          blue_ocean_canvas: data.blue_ocean_canvas,
+          blue_ocean_canvas: data.blue_ocean_strategy,
         })
       );
 
@@ -86,6 +89,19 @@ export default function BlueOceanPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Company Name
+              </label>
+              <input
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., GoodBlue"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Industry or Space
               </label>
               <input
@@ -104,32 +120,31 @@ export default function BlueOceanPage() {
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Growth teams needing faster insights"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
+                value={customerSegment}
+                onChange={(e) => setCustomerSegment(e.target.value)}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Alternatives (comma-separated)
+                Adoption Barriers or Pain Points (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Incumbent X, DIY, Freelancer network"
+                placeholder="e.g., high switching costs, complex onboarding, limited integrations"
                 value={alternatives}
                 onChange={(e) => setAlternatives(e.target.value)}
-                required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Value Innovation Focus (optional)
+                Current Value Proposition (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., reduce handoffs, raise personalization"
+                placeholder="e.g., fastest insights, simplest workflow"
                 value={valueFocus}
                 onChange={(e) => setValueFocus(e.target.value)}
               />
