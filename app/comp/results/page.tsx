@@ -15,10 +15,11 @@ type Competitor = {
 };
 
 interface CompetitiveAnalysisStored {
+  company: string;  // ✅ Added
   market: string;
   product: string;
   competitors?: string;
-  focus?: string;
+  goal?: string;  // ✅ Changed from 'focus'
   competitive_analysis?: any;
 }
 
@@ -181,7 +182,7 @@ export default function CompetitiveAnalysisResultsPage() {
 
   if (!stored || !parsed) return null;
 
-  const { market, product, competitors: competitorInput, focus } = stored;
+  const { company, market, product, competitors: competitorInput, goal } = stored;  // ✅ Updated destructuring
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-100 text-gray-800">
@@ -192,14 +193,16 @@ export default function CompetitiveAnalysisResultsPage() {
           <h1 className="text-4xl font-bold text-center text-blue-700 mb-2">
             Competitive Analysis
           </h1>
-          <p className="text-center text-gray-600 mb-8 text-lg">
-            {market && <span className="font-semibold">{market}</span>}
+          <p className="text-center text-gray-600 mb-2 text-lg">
+            {company && <span className="font-semibold">{company}</span>}
             {product && ` – ${product}`}
-            {(focus || competitorInput) && (
-              <span className="text-sm text-gray-500 ml-2">
-                {focus ? focus : ""}
-                {focus && competitorInput ? " • " : ""}
-                {competitorInput ? `vs. ${competitorInput}` : ""}
+          </p>
+          <p className="text-center text-gray-500 mb-8 text-sm">
+            {market && `${market} Market`}
+            {(goal || competitorInput) && (
+              <span className="ml-2">
+                {goal ? ` • ${goal}` : ""}
+                {competitorInput ? ` • vs. ${competitorInput}` : ""}
               </span>
             )}
           </p>
