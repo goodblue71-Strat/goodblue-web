@@ -185,16 +185,18 @@ export async function generateCompetitiveAnalysis({
 }
 
 export async function generateBlueOcean({
+  company,
   industry,
-  customer,
-  alternatives,
-  valueFocus,
+  customerSegment,
+  valueProposition,
+  blockers,
   prompt,
 }: {
+  company: string;
   industry: string;
-  customer: string;
-  alternatives?: string;
-  valueFocus?: string;
+  customerSegment: string;
+  valueProposition?: string;
+  blockers?: string;
   prompt?: string;
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -202,11 +204,18 @@ export async function generateBlueOcean({
   const response = await fetch(`${API_BASE}/app/blueocean`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ industry, customer, alternatives, valueFocus, prompt }),
+    body: JSON.stringify({ 
+      company,
+      industry, 
+      customer_segment: customerSegment,
+      value_proposition: valueProposition,
+      blockers,
+      prompt 
+    }),
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);  // ← Fixed: added ( before `
+    throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
   return await response.json();
