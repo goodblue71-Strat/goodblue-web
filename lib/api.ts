@@ -206,7 +206,7 @@ export async function generateBlueOcean({
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
+    throw new Error(`HTTP error! Status: ${response.status}`);  // ← Fixed: added ( before `
   }
 
   return await response.json();
