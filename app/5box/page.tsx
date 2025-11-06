@@ -7,11 +7,11 @@ import Footer from "@/components/Footer";
 import { generateFiveBox } from "../../lib/api";
 
 export default function FiveBoxPage() {
-  const [customer, setCustomer] = useState("");
-  const [need, setNeed] = useState("");
-  const [solution, setSolution] = useState("");
-  const [advantage, setAdvantage] = useState("");
-  const [outcome, setOutcome] = useState("");
+  const [company, setCompany] = useState("");
+  const [product, setProduct] = useState("");
+  const [market, setMarket] = useState("");
+  const [ambition, setAmbition] = useState("");
+  const [enablers, setEnablers] = useState("");
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,23 +25,23 @@ export default function FiveBoxPage() {
 
     try {
       const data = await generateFiveBox({
-        customer,
-        need,
-        solution,
-        advantage: advantage || undefined,
-        outcome: outcome || undefined,
+        company,
+        product,
+        market,
+        ambition: ambition || undefined,
+        enablers: enablers || undefined,
         prompt: prompt || undefined,
       });
 
       sessionStorage.setItem(
         "fiveBoxResult",
         JSON.stringify({
-          customer,
-          need,
-          solution,
-          advantage,
-          outcome,
-          five_box_strategy: data.five_box_strategy,
+          company,
+          product,
+          market,
+          ambition,
+          enablers,
+          five_box_analysis: data.five_box_analysis,
         })
       );
 
@@ -83,70 +83,70 @@ export default function FiveBoxPage() {
             5-Box Strategy Grid
           </h1>
           <p className="text-center text-gray-500 mb-8">
-            Clarify who you serve, the problem, your approach, proof, and outcomes
+            Define ambition, where-to-play, how-to-win, capabilities, and management systems
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Who is the primary customer?
+                Company Name
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Product marketers inside mid-market SaaS"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
+                placeholder="e.g., GoodBlue"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                What urgent need or problem do they face?
+                Product or Solution
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Need board-ready narratives without spending weeks"
-                value={need}
-                onChange={(e) => setNeed(e.target.value)}
+                placeholder="e.g., Strategy Copilot"
+                value={product}
+                onChange={(e) => setProduct(e.target.value)}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                How do we solve it?
+                Market or Context
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., AI co-pilot that builds strategy artifacts in minutes"
-                value={solution}
-                onChange={(e) => setSolution(e.target.value)}
+                placeholder="e.g., Mid-market B2B SaaS"
+                value={market}
+                onChange={(e) => setMarket(e.target.value)}
                 required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                What unfair advantage or proof do we have? (optional)
+                North-Star Ambition (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Proprietary benchmark library, ex-consultant advisors"
-                value={advantage}
-                onChange={(e) => setAdvantage(e.target.value)}
+                placeholder="e.g., Become the default strategy tool for growth teams"
+                value={ambition}
+                onChange={(e) => setAmbition(e.target.value)}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Desired outcome or north star metric (optional)
+                Strategic Enablers or Constraints (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Board alignment in one week, 50% faster launch decisions"
-                value={outcome}
-                onChange={(e) => setOutcome(e.target.value)}
+                placeholder="e.g., AI capabilities, partnership network, limited sales capacity"
+                value={enablers}
+                onChange={(e) => setEnablers(e.target.value)}
               />
             </div>
 
