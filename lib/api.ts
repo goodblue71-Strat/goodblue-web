@@ -222,26 +222,26 @@ export async function generateBlueOcean({
 }
 
 export async function generateFiveBox({
-  customer,
-  need,
-  solution,
-  advantage,
-  outcome,
+  company,
+  product,
+  market,
+  ambition,
+  enablers,
   prompt,
 }: {
-  customer: string;
-  need: string;
-  solution: string;
-  advantage?: string;
-  outcome?: string;
+  company: string;
+  product: string;
+  market: string;
+  ambition?: string;
+  enablers?: string;
   prompt?: string;
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  const response = await fetch(`${API_BASE}/app/5box`, {
+  const response = await fetch(`${API_BASE}/app/fivebox`, {  // Changed from /5box to /fivebox
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ customer, need, solution, advantage, outcome, prompt }),
+    body: JSON.stringify({ company, product, market, ambition, enablers, prompt }),
   });
 
   if (!response.ok) {
