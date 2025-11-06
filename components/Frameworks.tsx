@@ -7,7 +7,10 @@ const frameworks = [
   { name: "TAM / SAM / SOM", path: "/tam" },
   { name: "Porter's 5 forces", path: "/porters" },
   { name: "Mekko Market Analysis", path: "/mekko" },
-  { name: "Competitive Analysis", path: "/notready" },
+  { name: "Competitive Analysis", path: "/comp" },
+  { name: "Blue Ocean Canvas", path: "/blueocean" },
+  { name: "5-Box Strategy Grid", path: "/5box" },
+  { name: "Roadmaps", path: "/notready" },
   { name: "KPI Tree", path: "/notready" },
   { name: "Scenario", path: "/notready" },
 ];

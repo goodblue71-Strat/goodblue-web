@@ -154,3 +154,88 @@ export async function generateMekko({
 
   return await response.json();
 }
+export async function generateCompetitiveAnalysis({
+  market,
+  product,
+  competitors,
+  focus,
+  prompt,
+}: {
+  market: string;
+  product: string;
+  competitors: string;
+  focus?: string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+  const response = await fetch(`${API_BASE}/app/comp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ market, product, competitors, focus, prompt }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function generateBlueOcean({
+  industry,
+  customer,
+  alternatives,
+  valueFocus,
+  prompt,
+}: {
+  industry: string;
+  customer: string;
+  alternatives?: string;
+  valueFocus?: string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+  const response = await fetch(`${API_BASE}/app/blueocean`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ industry, customer, alternatives, valueFocus, prompt }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function generateFiveBox({
+  customer,
+  need,
+  solution,
+  advantage,
+  outcome,
+  prompt,
+}: {
+  customer: string;
+  need: string;
+  solution: string;
+  advantage?: string;
+  outcome?: string;
+  prompt?: string;
+}) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+  const response = await fetch(`${API_BASE}/app/5box`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ customer, need, solution, advantage, outcome, prompt }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}
