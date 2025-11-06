@@ -7,7 +7,7 @@ const frameworks = [
   { name: "TAM / SAM / SOM", path: "/tam" },
   { name: "Porter's 5 forces", path: "/porters" },
   { name: "Mekko Market Analysis", path: "/mekko" },
-  { name: "Roadmaps", path: "/notready" },
+  { name: "Competitive Analysis", path: "/notready" },
   { name: "KPI Tree", path: "/notready" },
   { name: "Scenario", path: "/notready" },
 ];
