@@ -10,9 +10,6 @@ const frameworks = [
   { name: "Competitive Analysis", path: "/comp" },
   { name: "Blue Ocean Canvas", path: "/blueocean" },
   { name: "5-Box Strategy Grid", path: "/5box" },
-  { name: "Roadmaps", path: "/notready" },
-  { name: "KPI Tree", path: "/notready" },
-  { name: "Scenario", path: "/notready" },
 ];
 
 export default function Frameworks() {
