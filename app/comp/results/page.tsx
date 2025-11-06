@@ -290,45 +290,46 @@ export default function CompetitiveAnalysisResultsPage() {
 
               {/* Bar Chart */}
               <div className="space-y-6">
-                {parsed.factorScores.map((scoreData, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-base font-semibold text-gray-800">
-                        {scoreData.competitor}
-                      </h3>
-                      <span className="text-sm text-gray-500">
-                        Avg: {(
-                          Object.values(scoreData.scores).reduce((a, b) => a + b, 0) /
-                          Object.values(scoreData.scores).length
-                        ).toFixed(1)}
-                      </span>
+                {parsed.factorScores.map((scoreData, idx) => {
+                  const totalScore = Object.values(scoreData.scores).reduce((a, b) => a + b, 0);
+                  const avgScore = totalScore / Object.values(scoreData.scores).length;
+                  
+                  return (
+                    <div key={idx} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-semibold text-gray-800">
+                          {scoreData.competitor}
+                        </h3>
+                        <span className="text-sm text-gray-500">
+                          Avg: {avgScore.toFixed(1)}
+                        </span>
+                      </div>
+                      
+                      {/* Horizontal bars proportional to score */}
+                      <div className="flex gap-0.5 w-full">
+                        {parsed.factors?.map((factor, factorIdx) => {
+                          const score = scoreData.scores[factor.name] || 0;
+                          const percentage = (score / maxScore) * 100;
+                          
+                          return (
+                            <div
+                              key={factorIdx}
+                              className="relative h-10 flex items-center justify-center text-white text-xs font-semibold transition-all hover:opacity-90"
+                              style={{
+                                width: `${percentage}%`,
+                                backgroundColor: FACTOR_COLORS[factorIdx % FACTOR_COLORS.length],
+                                minWidth: score > 0 ? '30px' : '0px',
+                              }}
+                              title={`${factor.name}: ${score.toFixed(1)}/10`}
+                            >
+                              {score > 0 && <span>{score.toFixed(1)}</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                    
-                    {/* Stacked horizontal bars */}
-                    <div className="flex h-8 w-full bg-gray-100 rounded-lg overflow-hidden">
-                      {parsed.factors?.map((factor, factorIdx) => {
-                        const score = scoreData.scores[factor.name] || 0;
-                        const percentage = (score / maxScore) * 100;
-                        const width = (100 / (parsed.factors?.length || 5));
-                        
-                        return (
-                          <div
-                            key={factorIdx}
-                            className="relative flex items-center justify-center text-white text-xs font-semibold"
-                            style={{
-                              width: `${width}%`,
-                              backgroundColor: FACTOR_COLORS[factorIdx % FACTOR_COLORS.length],
-                              opacity: 0.3 + (score / maxScore) * 0.7,
-                            }}
-                            title={`${factor.name}: ${score.toFixed(1)}/10`}
-                          >
-                            {score.toFixed(1)}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Factor Descriptions */}
@@ -360,11 +361,11 @@ export default function CompetitiveAnalysisResultsPage() {
             {parsed.competitors.map((competitor, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-gray-200 shadow-sm bg-white/70 p-6 flex flex-col gap-4"
+                className="rounded-2xl border-2 border-gray-300 shadow-md bg-white p-6 flex flex-col gap-4"
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold text-blue-800">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-bold text-blue-800">
                       {competitor.name}
                     </h3>
                     {competitor.share != null && (
@@ -441,9 +442,9 @@ export default function CompetitiveAnalysisResultsPage() {
           </div>
 
           {(parsed.recommendation || parsed.whitespace) && (
-            <div className="mb-10 grid gap-6 lg:grid-cols-2">
+            <div className="mb-10">
               {parsed.recommendation && (
-                <div className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200 shadow-sm">
+                <div className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200 shadow-sm mb-6">
                   <h3 className="text-xl font-semibold text-blue-900 mb-3">
                     Recommended Strategic Response
                   </h3>
