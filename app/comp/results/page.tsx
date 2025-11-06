@@ -14,12 +14,23 @@ type Competitor = {
   moves: string[];
 };
 
+type Factor = {
+  name: string;
+  description?: string;
+  weight?: number;
+};
+
+type FactorScore = {
+  competitor: string;
+  scores: { [factorName: string]: number };
+};
+
 interface CompetitiveAnalysisStored {
-  company: string;  // ✅ Added
+  company: string;
   market: string;
   product: string;
   competitors?: string;
-  goal?: string;  // ✅ Changed from 'focus'
+  goal?: string;
   competitive_analysis?: any;
 }
 
@@ -29,6 +40,8 @@ interface CompetitiveParsed {
   whitespace?: string;
   competitors: Competitor[];
   moves: string[];
+  factors?: Factor[];
+  factorScores?: FactorScore[];
 }
 
 const defaultCompetitors: Competitor[] = [
@@ -129,6 +142,36 @@ const toCompetitors = (value: any): Competitor[] => {
     .filter(Boolean) as Competitor[];
 };
 
+const toFactors = (value: any): Factor[] => {
+  if (!value) return [];
+  if (!Array.isArray(value)) return [];
+  
+  return value.map((item: any) => ({
+    name: item.name || "Factor",
+    description: item.description || "",
+    weight: item.weight || 0.2,
+  }));
+};
+
+const toFactorScores = (value: any): FactorScore[] => {
+  if (!value) return [];
+  if (!Array.isArray(value)) return [];
+  
+  return value.map((item: any) => ({
+    competitor: item.competitor || "Unknown",
+    scores: item.scores || {},
+  }));
+};
+
+// Color palette for factors
+const FACTOR_COLORS = [
+  "#3b82f6", // blue-500
+  "#8b5cf6", // violet-500
+  "#ec4899", // pink-500
+  "#f59e0b", // amber-500
+  "#10b981", // emerald-500
+];
+
 export default function CompetitiveAnalysisResultsPage() {
   const [stored, setStored] = useState<CompetitiveAnalysisStored | null>(null);
   const [parsed, setParsed] = useState<CompetitiveParsed | null>(null);
@@ -157,13 +200,15 @@ export default function CompetitiveAnalysisResultsPage() {
       }
     }
 
-    const summary = toParagraphs(obj?.summary);
-    const recommendation = cleanText(obj?.recommendation ?? obj?.takeaway ?? "");
+    const summary = toParagraphs(obj?.summary ?? obj?.executive_summary);
+    const recommendation = cleanText(obj?.recommendation ?? obj?.takeaway ?? obj?.key_takeaway ?? "");
     const whitespace = cleanText(obj?.whitespace ?? obj?.opportunity ?? "");
-    const competitors = toCompetitors(obj?.competitors ?? obj?.players ?? obj?.landscape);
+    const competitors = toCompetitors(obj?.competitors ?? obj?.players ?? obj?.landscape ?? obj?.competitive_dynamics);
     const moves = toParagraphs(
-      obj?.recommended_moves ?? obj?.playbook ?? obj?.actions ?? obj?.next_steps
+      obj?.recommended_moves ?? obj?.playbook ?? obj?.actions ?? obj?.next_steps ?? obj?.recommended_actions
     );
+    const factors = toFactors(obj?.factors);
+    const factorScores = toFactorScores(obj?.factor_scores ?? obj?.factorScores);
 
     setStored(base);
     setParsed({
@@ -172,6 +217,8 @@ export default function CompetitiveAnalysisResultsPage() {
       whitespace: whitespace || undefined,
       competitors: competitors.length ? competitors : defaultCompetitors,
       moves: moves.length ? moves : defaultMoves,
+      factors: factors.length ? factors : undefined,
+      factorScores: factorScores.length ? factorScores : undefined,
     });
   }, [router]);
 
@@ -180,9 +227,11 @@ export default function CompetitiveAnalysisResultsPage() {
     return parsed.competitors.reduce((acc, c) => acc + (c.share ?? 0), 0);
   }, [parsed]);
 
+  const maxScore = 10; // Scores are 0-10
+
   if (!stored || !parsed) return null;
 
-  const { company, market, product, competitors: competitorInput, goal } = stored;  // ✅ Updated destructuring
+  const { company, market, product, competitors: competitorInput, goal } = stored;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-blue-100 text-gray-800">
@@ -218,6 +267,92 @@ export default function CompetitiveAnalysisResultsPage() {
                   {p}
                 </p>
               ))}
+            </div>
+          )}
+
+          {/* Factor-Based Bar Chart */}
+          {parsed.factors && parsed.factorScores && parsed.factorScores.length > 0 && (
+            <div className="mb-10 p-8 bg-white rounded-2xl border border-gray-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Competitive Factor Analysis</h2>
+              
+              {/* Legend */}
+              <div className="flex flex-wrap gap-4 mb-6">
+                {parsed.factors.map((factor, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <div
+                      className="w-4 h-4 rounded"
+                      style={{ backgroundColor: FACTOR_COLORS[idx % FACTOR_COLORS.length] }}
+                    ></div>
+                    <span className="text-sm font-medium text-gray-700">{factor.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bar Chart */}
+              <div className="space-y-6">
+                {parsed.factorScores.map((scoreData, idx) => (
+                  <div key={idx} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base font-semibold text-gray-800">
+                        {scoreData.competitor}
+                      </h3>
+                      <span className="text-sm text-gray-500">
+                        Avg: {(
+                          Object.values(scoreData.scores).reduce((a, b) => a + b, 0) /
+                          Object.values(scoreData.scores).length
+                        ).toFixed(1)}
+                      </span>
+                    </div>
+                    
+                    {/* Stacked horizontal bars */}
+                    <div className="flex h-8 w-full bg-gray-100 rounded-lg overflow-hidden">
+                      {parsed.factors?.map((factor, factorIdx) => {
+                        const score = scoreData.scores[factor.name] || 0;
+                        const percentage = (score / maxScore) * 100;
+                        const width = (100 / (parsed.factors?.length || 5));
+                        
+                        return (
+                          <div
+                            key={factorIdx}
+                            className="relative flex items-center justify-center text-white text-xs font-semibold"
+                            style={{
+                              width: `${width}%`,
+                              backgroundColor: FACTOR_COLORS[factorIdx % FACTOR_COLORS.length],
+                              opacity: 0.3 + (score / maxScore) * 0.7,
+                            }}
+                            title={`${factor.name}: ${score.toFixed(1)}/10`}
+                          >
+                            {score.toFixed(1)}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Factor Descriptions */}
+              {parsed.factors.some(f => f.description) && (
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Factor Definitions</h3>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {parsed.factors.map((factor, idx) => (
+                      factor.description && (
+                        <div key={idx} className="flex gap-2">
+                          <div
+                            className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                            style={{ backgroundColor: FACTOR_COLORS[idx % FACTOR_COLORS.length] }}
+                          ></div>
+                          <div>
+                            <span className="font-medium text-gray-700">{factor.name}:</span>
+                            <span className="text-sm text-gray-600 ml-1">{factor.description}</span>
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
