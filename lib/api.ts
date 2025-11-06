@@ -227,6 +227,7 @@ export async function generateFiveBox({
   market,
   ambition,
   enablers,
+  customContext,
   prompt,
 }: {
   company: string;
@@ -234,14 +235,28 @@ export async function generateFiveBox({
   market: string;
   ambition?: string;
   enablers?: string;
+  customContext?: string;
   prompt?: string;
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  const response = await fetch(`${API_BASE}/app/fivebox`, {  // Changed from /5box to /fivebox
+  // If no custom prompt, build one that incorporates the need/problem context
+  let finalPrompt = prompt;
+  if (!prompt && customContext) {
+    finalPrompt = `The customer problem/need is: ${customContext}. Build a 5-box strategy that addresses this need with clear ambition, where-to-play choices, and how-to-win differentiation.`;
+  }
+
+  const response = await fetch(`${API_BASE}/app/fivebox`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ company, product, market, ambition, enablers, prompt }),
+    body: JSON.stringify({ 
+      company, 
+      product, 
+      market, 
+      ambition, 
+      enablers, 
+      prompt: finalPrompt 
+    }),
   });
 
   if (!response.ok) {
