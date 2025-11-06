@@ -8,8 +8,8 @@ const frameworks = [
   { name: "Porter's 5 forces", path: "/porters" },
   { name: "Mekko Market Analysis", path: "/mekko" },
   { name: "Competitive Analysis", path: "/notready" },
-  { name: "KPI Tree", path: "/notready" },
-  { name: "Scenario", path: "/notready" },
+  { name: "Blue Ocean Canvas", path: "/notready" },
+  { name: "5-box Strategy", path: "/notready" },
 ];
 
 export default function Frameworks() {
