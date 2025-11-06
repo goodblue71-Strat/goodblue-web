@@ -7,10 +7,11 @@ import Footer from "@/components/Footer";
 import { generateCompetitiveAnalysis } from "../../lib/api";
 
 export default function CompetitiveAnalysisPage() {
+  const [company, setCompany] = useState("");
   const [market, setMarket] = useState("");
   const [product, setProduct] = useState("");
   const [competitors, setCompetitors] = useState("");
-  const [focus, setFocus] = useState("");
+  const [goal, setGoal] = useState("");
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,20 +25,22 @@ export default function CompetitiveAnalysisPage() {
 
     try {
       const data = await generateCompetitiveAnalysis({
+        company,
         market,
         product,
-        competitors,
-        focus: focus || undefined,
+        competitors: competitors || undefined,
+        goal: goal || undefined,
         prompt: prompt || undefined,
       });
 
       sessionStorage.setItem(
         "compResult",
         JSON.stringify({
+          company,
           market,
           product,
           competitors,
-          focus,
+          goal,
           competitive_analysis: data.competitive_analysis,
         })
       );
@@ -86,6 +89,19 @@ export default function CompetitiveAnalysisPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Company Name
+              </label>
+              <input
+                className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., GoodBlue"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Market or Category
               </label>
               <input
@@ -112,26 +128,25 @@ export default function CompetitiveAnalysisPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Key Competitors (comma-separated)
+                Key Competitors (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Competitor A, Competitor B"
                 value={competitors}
                 onChange={(e) => setCompetitors(e.target.value)}
-                required
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Focus Area (optional)
+                Strategic Goal (optional)
               </label>
               <input
                 className="w-full border border-gray-300 p-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., product differentiation, pricing, positioning"
-                value={focus}
-                onChange={(e) => setFocus(e.target.value)}
+                placeholder="e.g., increase market share, differentiate pricing"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
               />
             </div>
 
