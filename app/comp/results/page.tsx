@@ -126,7 +126,7 @@ const toCompetitors = (value: any): Competitor[] => {
       const moves = toParagraphs(item.recommended_actions ?? item.moves ?? item.plays);
 
       return {
-        name: item.name ?? item.label ?? "Competitor",
+        name: item.name ?? item.competitor ?? item.label ?? "Competitor",
         share:
           item.share != null
             ? Number(item.share)
