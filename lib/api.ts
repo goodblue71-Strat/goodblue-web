@@ -155,16 +155,18 @@ export async function generateMekko({
   return await response.json();
 }
 export async function generateCompetitiveAnalysis({
+  company,
   market,
   product,
   competitors,
-  focus,
+  goal,
   prompt,
 }: {
+  company: string;
   market: string;
   product: string;
-  competitors: string;
-  focus?: string;
+  competitors?: string;
+  goal?: string;
   prompt?: string;
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -172,7 +174,7 @@ export async function generateCompetitiveAnalysis({
   const response = await fetch(`${API_BASE}/app/comp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ market, product, competitors, focus, prompt }),
+    body: JSON.stringify({ company, market, product, competitors, goal, prompt }),
   });
 
   if (!response.ok) {
