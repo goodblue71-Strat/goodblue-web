@@ -14,15 +14,15 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <Section className="pt-4">
+      <Section className="!py-4 sm:!py-6">
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
           {/* Left column: text */}
           <div>
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-              Competitive analysis - board ready in minutes.
+              Competitive analysis — decision-ready in minutes.
             </h1>
             <p className="mt-4 text-lg text-gray-600">
-              Compare competitors, identify gaps, and generate executive-ready insights and slides—powered by AI.
+              Understand competitors, identify strategic gaps, and generate executive-ready decisions and decks — powered by AI.
             </p>
             <div className="mt-8 flex items-center gap-4">
               <a
@@ -30,14 +30,14 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
               >
-                Try the App
+                Run Competitive Analysis
               </a>
               <a href="#sample" className="text-blue-700 font-medium hover:underline">
-                View Sample Analysis
+                View Sample Competitive Report
               </a>
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              Powered by proven frameworks (SWOT, benchmarking, market sizing).
+              Powered by proven strategy methods (competitive SWOT, benchmarking, market intelligence).
             </p>
           </div>
 
@@ -56,7 +56,6 @@ export default function Home() {
       </Section>
 
       <HowItWorks />
-      <Frameworks />
       <CTASection />
       <Footer />
     </>

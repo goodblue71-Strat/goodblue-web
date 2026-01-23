@@ -4,15 +4,15 @@ import Image from "next/image";
 import Section from "./Section";
 
 const items = [
-  { title: "Select Framework", desc: "SWOT, Ansoff-TAM", src: "/pptChecklist.png" },
-  { title: "Upload Data", desc: "Market, Product or Notes", src: "/pptUpload.png" },
-  { title: "Generate Insights", desc: "AI analyzes & visualizes", src: "/pptInsights.png" },
-  { title: "Export Decks", desc: "Ready-to-share slides", src: "/pptSlides.png" },
+  { title: "Select Market & Competitors", desc: "(Company, competitors, market, product line)", src: "/pptChecklist.png" },
+  { title: "Ingest Market Signals", desc: "(Market data, product info, notes, documents, insights)", src: "/pptUpload.png" },
+  { title: "Generate Competitive Intelligence", desc: "(Positioning, gaps, threats, opportunities, benchmarks)", src: "/pptInsights.png" },
+  { title: "Export Strategy Outputs", desc: "(Board decks, exec briefs, strategy docs)", src: "/pptSlides.png" },
 ];
 
 export default function HowItWorks() {
   return (
-    <Section id="how">
+    <Section id="how"className="!py-4 sm:!py-8">
       <h2 className="text-2xl font-semibold mb-6 text-center">How it Works</h2>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -14,8 +14,8 @@ const frameworks = [
 
 export default function Frameworks() {
   return (
-    <Section id="frameworks">
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    <Section id="frameworks" className="!py-4 sm:!py-6">
+      <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {frameworks.map((f) => (
           <Link
             key={f.name}

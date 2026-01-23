@@ -62,7 +62,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
               rel="noopener noreferrer"
               className="hover:text-blue-600 transition-colors"
             >
-              How it Works
+              Methodology
             </a>
             <a
               href="/Pricing"
@@ -85,7 +85,9 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             )}
           </nav>
         </div>
-      </div>
+      
+      
+      
     </header>
   );
 }
