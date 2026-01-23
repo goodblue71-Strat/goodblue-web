@@ -30,7 +30,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="rounded-full bg-blue-600 px-6 py-3 text-white font-semibold shadow hover:bg-blue-700"
               >
-                Try the App
+                Run Competitive Analysis
               </a>
               <a href="#sample" className="text-blue-700 font-medium hover:underline">
                 View Sample Analysis
