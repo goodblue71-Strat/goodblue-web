@@ -15,8 +15,6 @@ const frameworks = [
 export default function Frameworks() {
   return (
     <Section id="frameworks">
-      <h2 className="text-2xl font-semibold">Frameworks You Know, Faster Than Ever</h2>
-      <p className="text-gray-600 mt-2">Choose classic strategy lenses—combine multiple in one run.</p>
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {frameworks.map((f) => (
           <Link

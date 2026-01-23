@@ -19,10 +19,10 @@ export default function Home() {
           {/* Left column: text */}
           <div>
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-              Strategy, generated—board-ready in minutes.
+              Competitive analysis - board ready in minutes.
             </h1>
             <p className="mt-4 text-lg text-gray-600">
-              Turn market inputs into insights and slides powered by AI and proven strategy frames.
+              Compare competitors, identify gaps, and generate executive-ready insights and slides—powered by AI.
             </p>
             <div className="mt-8 flex items-center gap-4">
               <a
@@ -33,11 +33,11 @@ export default function Home() {
                 Try the App
               </a>
               <a href="#sample" className="text-blue-700 font-medium hover:underline">
-                View Sample Deck
+                View Sample Analysis
               </a>
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              GoodBlue is free during our early access phase. Paid plans coming soon.
+              Powered by proven frameworks (SWOT, benchmarking, market sizing).
             </p>
           </div>
 

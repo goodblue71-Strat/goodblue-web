@@ -29,7 +29,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
         <div className="flex items-center justify-between py-5">
           {/* Logo */}
           <a
-            href="https://goodblue.ai/"
+            href="/"
             target={target}
             rel="noopener noreferrer"
             className="flex items-center space-x-2"
@@ -49,7 +49,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
           {/* Nav Links */}
           <nav className="flex items-center gap-6 text-sm font-medium text-gray-700">
             <a
-              href="https://goodblue.ai/"
+              href="/"
               target={target}
               rel="noopener noreferrer"
               className="hover:text-blue-600 transition-colors"
@@ -57,15 +57,15 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
               Home
             </a>
             <a
-              href="https://goodblue.ai/#frameworks"
+              href="/how-it-works"
               target={target}
               rel="noopener noreferrer"
               className="hover:text-blue-600 transition-colors"
             >
-              Frameworks
+              How it Works
             </a>
             <a
-              href="https://goodblue.ai/Pricing"
+              href="/Pricing"
               target={target}
               rel="noopener noreferrer"
               className="hover:text-blue-600 transition-colors"
