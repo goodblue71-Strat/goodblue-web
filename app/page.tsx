@@ -18,7 +18,7 @@ export default function Home() {
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
           {/* Left column: text */}
           <div>
-            <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
               Competitive intelligence, ready in minutes.
             </h1>
             <p className="mt-4 text-lg text-gray-600">
