@@ -19,7 +19,7 @@ export default function Home() {
           {/* Left column: text */}
           <div>
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-              Competitive analysis — decision-ready in minutes.
+              Competitive intelligence, ready in minutes.
             </h1>
             <p className="mt-4 text-lg text-gray-600">
               Understand competitors, identify strategic gaps, and generate executive-ready decisions and decks — powered by AI.
