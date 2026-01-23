@@ -85,9 +85,7 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             )}
           </nav>
         </div>
-      
-      
-      
+      </div>
     </header>
   );
 }
