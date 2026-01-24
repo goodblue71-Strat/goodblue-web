@@ -22,7 +22,7 @@ echo "⬇️ Pulling latest changes from origin/main..."
 git pull origin main
 
 echo "🔄 merging..."
-git merge feature/companalysis
+git merge feature/comprag
 
 echo "⬆️ Pushing to origin/main..."
 git push origin main
