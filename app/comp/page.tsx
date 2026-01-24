@@ -13,11 +13,23 @@ export default function CompetitiveAnalysisPage() {
   const [competitors, setCompetitors] = useState("");
   const [goal, setGoal] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
   const showCTA = pathname !== "/comp" && pathname !== "/app/comp";
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setFiles((prev) => [...prev, ...newFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,6 +173,55 @@ export default function CompetitiveAnalysisPage() {
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={3}
               ></textarea>
+            </div>
+
+            {/* File Upload Section */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Documents (optional)
+              </label>
+              <p className="text-xs text-gray-500 mb-2">
+                PDF, Word, Excel, or PowerPoint files to enhance analysis
+              </p>
+
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                <input
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer text-blue-600 hover:text-blue-800"
+                >
+                  Click to upload files
+                </label>
+                <p className="text-xs text-gray-400 mt-1">or drag and drop</p>
+              </div>
+
+              {/* File List Preview */}
+              {files.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {files.map((file, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg text-sm"
+                    >
+                      <span className="truncate max-w-xs">{file.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="text-red-500 hover:text-red-700 ml-2"
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <button
