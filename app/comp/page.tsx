@@ -6,6 +6,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { generateCompetitiveAnalysis } from "../../lib/api";
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
+const MAX_TOTAL_SIZE = 25 * 1024 * 1024; // 25MB total
+const MAX_FILE_COUNT = 10;
+
 export default function CompetitiveAnalysisPage() {
   const [company, setCompany] = useState("");
   const [market, setMarket] = useState("");
@@ -15,20 +19,60 @@ export default function CompetitiveAnalysisPage() {
   const [prompt, setPrompt] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const router = useRouter();
   const pathname = usePathname();
   const showCTA = pathname !== "/comp" && pathname !== "/app/comp";
 
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  };
+
+  const getTotalSize = (fileList: File[]) => {
+    return fileList.reduce((sum, f) => sum + f.size, 0);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError(null);
+
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
+
+      // Check file count
+      if (files.length + newFiles.length > MAX_FILE_COUNT) {
+        setFileError(`Maximum ${MAX_FILE_COUNT} files allowed`);
+        return;
+      }
+
+      // Check individual file sizes
+      const oversizedFiles = newFiles.filter((f) => f.size > MAX_FILE_SIZE);
+      if (oversizedFiles.length > 0) {
+        setFileError(
+          `Files must be under 10MB: ${oversizedFiles.map((f) => f.name).join(", ")}`
+        );
+        return;
+      }
+
+      // Check total size
+      const currentSize = getTotalSize(files);
+      const newSize = getTotalSize(newFiles);
+      if (currentSize + newSize > MAX_TOTAL_SIZE) {
+        setFileError(
+          `Total upload size cannot exceed 25MB (current: ${formatFileSize(currentSize + newSize)})`
+        );
+        return;
+      }
+
       setFiles((prev) => [...prev, ...newFiles]);
     }
   };
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
+    setFileError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -181,7 +225,7 @@ export default function CompetitiveAnalysisPage() {
                 Upload Documents (optional)
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                PDF, Word, Excel, or PowerPoint files to enhance analysis
+                PDF, Word, Excel, or PowerPoint files to enhance analysis (max 10MB per file, 25MB total)
               </p>
 
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -202,25 +246,40 @@ export default function CompetitiveAnalysisPage() {
                 <p className="text-xs text-gray-400 mt-1">or drag and drop</p>
               </div>
 
+              {/* Error Message */}
+              {fileError && (
+                <p className="mt-2 text-sm text-red-600">{fileError}</p>
+              )}
+
               {/* File List Preview */}
               {files.length > 0 && (
-                <ul className="mt-3 space-y-2">
-                  {files.map((file, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg text-sm"
-                    >
-                      <span className="truncate max-w-xs">{file.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeFile(index)}
-                        className="text-red-500 hover:text-red-700 ml-2"
+                <>
+                  <ul className="mt-3 space-y-2">
+                    {files.map((file, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg text-sm"
                       >
-                        ✕
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                        <span className="truncate max-w-xs">
+                          {file.name}{" "}
+                          <span className="text-gray-400">
+                            ({formatFileSize(file.size)})
+                          </span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-red-500 hover:text-red-700 ml-2"
+                        >
+                          ✕
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 text-xs text-gray-500">
+                    Total: {formatFileSize(getTotalSize(files))} / 25MB
+                  </p>
+                </>
               )}
             </div>
 
