@@ -43,8 +43,8 @@ export default function CompetitiveAnalysisPage() {
         competitors: competitors || undefined,
         goal: goal || undefined,
         prompt: prompt || undefined,
+        files: files.length > 0 ? files : undefined,
       });
-
       sessionStorage.setItem(
         "compResult",
         JSON.stringify({
