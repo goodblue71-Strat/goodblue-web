@@ -26,6 +26,6 @@ git add .
 echo "💬 Committing with message: '$COMMIT_MSG'"
 git commit -m "$COMMIT_MSG" || echo "⚠️ No changes to commit."
 
-echo "⬆️ Pushing to origin/main..."
+echo "⬆️ Pushing to origin/feature/comprag..."
 git push origin feature/comprag
 echo "✅ Done! All changes have been pushed to feature/comprag."
