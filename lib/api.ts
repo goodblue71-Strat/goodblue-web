@@ -154,6 +154,7 @@ export async function generateMekko({
 
   return await response.json();
 }
+
 export async function generateCompetitiveAnalysis({
   company,
   market,
@@ -161,6 +162,7 @@ export async function generateCompetitiveAnalysis({
   competitors,
   goal,
   prompt,
+  files,
 }: {
   company: string;
   market: string;
@@ -168,13 +170,30 @@ export async function generateCompetitiveAnalysis({
   competitors?: string;
   goal?: string;
   prompt?: string;
+  files?: File[];
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
+  // Use FormData to send both text fields and files
+  const formData = new FormData();
+  formData.append("company", company);
+  formData.append("market", market);
+  formData.append("product", product);
+  if (competitors) formData.append("competitors", competitors);
+  if (goal) formData.append("goal", goal);
+  if (prompt) formData.append("prompt", prompt);
+
+  // Append each file
+  if (files && files.length > 0) {
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+  }
+
   const response = await fetch(`${API_BASE}/app/comp`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ company, market, product, competitors, goal, prompt }),
+    // Note: Do NOT set Content-Type header - browser sets it automatically with boundary
+    body: formData,
   });
 
   if (!response.ok) {
