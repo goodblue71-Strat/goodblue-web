@@ -6,8 +6,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { generateCompetitiveAnalysis } from "../../lib/api";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
-const MAX_TOTAL_SIZE = 25 * 1024 * 1024; // 25MB total
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB per file
+const MAX_TOTAL_SIZE = 5 * 1024 * 1024; // 5MB total
 const MAX_FILE_COUNT = 10;
 
 export default function CompetitiveAnalysisPage() {
@@ -225,7 +225,7 @@ export default function CompetitiveAnalysisPage() {
                 Upload Documents (optional)
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                PDF, Word, Excel, or PowerPoint files to enhance analysis (max 10MB per file, 25MB total)
+                PDF, Word, Excel, or PowerPoint files to enhance analysis (max 1 MB per file, 5MB total)
               </p>
 
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -277,7 +277,7 @@ export default function CompetitiveAnalysisPage() {
                     ))}
                   </ul>
                   <p className="mt-2 text-xs text-gray-500">
-                    Total: {formatFileSize(getTotalSize(files))} / 25MB
+                    Total: {formatFileSize(getTotalSize(files))} / 5MB
                   </p>
                 </>
               )}
