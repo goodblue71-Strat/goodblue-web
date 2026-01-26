@@ -32,7 +32,7 @@ export default function Home() {
               >
                 Run Competitive Analysis
               </a>
-              <a href="#sample" className="text-blue-700 font-medium hover:underline">
+              <a href="https://th6l1p45uevhzgdg.public.blob.vercel-storage.com/GoodBlue_Competitive%20Analysis_Sample_Deck.pdf" className="text-blue-700 font-medium hover:underline">
                 View Sample Competitive Report
               </a>
             </div>
