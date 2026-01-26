@@ -10,7 +10,7 @@ export default function Footer() {
             <a href="https://goodblue.ai/contact" className="hover:text-gray-900" target="_top">
               Contact
             </a>
-            <a href="https://www.linkedin.com/in/kirthivani/" 
+            <a href="https://www.linkedin.com/" 
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-900"
