@@ -98,6 +98,7 @@ export default function CompetitiveAnalysisPage() {
           competitors,
           goal,
           competitive_analysis: data.competitive_analysis,
+          pptx_path: data.pptx_path,
         })
       );
 
