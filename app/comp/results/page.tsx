@@ -121,6 +121,7 @@ interface StoredResult {
   competitors?: string;
   goal?: string;
   competitive_analysis?: DeckAnalysis;
+  pptx_path?: string | null;
 }
 
 // Quadrant colors
@@ -561,13 +562,35 @@ export default function CompetitiveAnalysisResultsPage() {
               New Analysis
             </button>
             <button
+              onClick={async () => {
+                if (!analysis) return;
+                const res = await fetch("/api/generate-pptx", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(analysis),
+              });
+                if (!res.ok) { alert("Failed to generate PPT"); return; }
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `GoodBlue_${stored.company}_Competitive_Analysis.pptx`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+                className="px-8 py-3 rounded-full bg-green-600 text-white font-semibold shadow-lg hover:bg-green-700 hover:shadow-xl transition-all"
+             >
+              Download PPT
+            </button>
+            <button
               onClick={() => window.print()}
               className="px-8 py-3 rounded-full bg-gray-600 text-white font-semibold shadow-lg hover:bg-gray-700 hover:shadow-xl transition-all"
             >
               Print / Save PDF
             </button>
           </div>
-        </div>
+        
+      </div>
       </main>
 
       <Footer />
