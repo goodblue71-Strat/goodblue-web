@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   showCTA?: boolean; // optional prop to toggle "Try the App" button
@@ -72,17 +73,21 @@ export default function Navbar({ showCTA = true }: NavbarProps) {
             >
               Pricing
             </a>
-
-            {/* Try App Button (hidden if embedded or showCTA=false) */}
-            {!isEmbedded && showCTA && (
-              <a
-                href="/tryapp"
-                rel="noopener noreferrer"
-                className="rounded-full bg-blue-600 px-5 py-2 text-white shadow hover:bg-blue-700 transition-colors whitespace-nowrap"
-              >
-                Try the App
-              </a>
-            )}
+            
+            {!isEmbedded && (
+             <>
+               <SignedOut>
+                 <SignInButton mode="redirect">
+                   <button className="rounded-full bg-blue-600 px-5 py-2 text-white shadow hover:bg-blue-700 transition-colors whitespace-nowrap">
+                     Sign In
+                   </button>
+                 </SignInButton>
+               </SignedOut>
+               <SignedIn>
+                 <UserButton afterSignOutUrl="/" />
+               </SignedIn>
+            </>
+          )}
           </nav>
         </div>
       </div>
