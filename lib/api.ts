@@ -24,6 +24,7 @@ export async function generateSWOT({
   
   return await response.json();
 }
+
 export async function generateAnsoff({
   company,
   product,
@@ -50,6 +51,7 @@ export async function generateAnsoff({
   
   return await response.json();
 }
+
 export async function generateTAM({
   company,
   product,
@@ -98,6 +100,7 @@ export async function generateTAM({
 
   return await response.json();
 }
+
 export async function generatePorter({
   company,
   product,
@@ -121,6 +124,7 @@ export async function generatePorter({
   if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
   return await response.json();
 }
+
 export async function generateMekko({
   market,
   product,
@@ -174,7 +178,6 @@ export async function generateCompetitiveAnalysis({
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  // Use FormData to send both text fields and files
   const formData = new FormData();
   formData.append("company", company);
   formData.append("market", market);
@@ -183,24 +186,37 @@ export async function generateCompetitiveAnalysis({
   if (goal) formData.append("goal", goal);
   if (prompt) formData.append("prompt", prompt);
 
-  // Append each file
   if (files && files.length > 0) {
     files.forEach((file) => {
       formData.append("files", file);
     });
   }
 
-  const response = await fetch(`${API_BASE}/app/comp`, {
-    method: "POST",
-    // Note: Do NOT set Content-Type header - browser sets it automatically with boundary
-    body: formData,
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 360000); // 6 minutes
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
+  try {
+    const response = await fetch(`${API_BASE}/app/comp`, {
+      method: "POST",
+      body: formData,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === "AbortError") {
+      throw new Error(
+        "Analysis is taking longer than expected. Please try again."
+      );
+    }
+    throw error;
   }
-
-  return await response.json();
 }
 
 export async function generateBlueOcean({
@@ -259,7 +275,6 @@ export async function generateFiveBox({
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  // If no custom prompt, build one that incorporates the need/problem context
   let finalPrompt = prompt;
   if (!prompt && customContext) {
     finalPrompt = `The customer problem/need is: ${customContext}. Build a 5-box strategy that addresses this need with clear ambition, where-to-play choices, and how-to-win differentiation.`;

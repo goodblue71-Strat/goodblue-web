@@ -15,10 +15,10 @@ fi
 COMMIT_MSG="$1"
 
 echo "🌿 Switching to feature/comprag branch..."
-git checkout feature/claude
+git checkout feature/auth
 
 echo "⬇️ Pulling latest changes from origin/feature/comprag..."
-git pull origin feature/claude
+git pull origin feature/comprag
 
 echo "🔄 Staging changes..."
 git add .
@@ -26,6 +26,6 @@ git add .
 echo "💬 Committing with message: '$COMMIT_MSG'"
 git commit -m "$COMMIT_MSG" || echo "⚠️ No changes to commit."
 
-echo "⬆️ Pushing to origin/feature/claude..."
-git push origin feature/claude
+echo "⬆️ Pushing to origin/feature/comprag..."
+git push origin feature/comprag
 echo "✅ Done! All changes have been pushed to feature/comprag."

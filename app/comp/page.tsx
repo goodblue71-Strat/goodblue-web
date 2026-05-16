@@ -103,9 +103,9 @@ export default function CompetitiveAnalysisPage() {
       );
 
       router.push("/comp/results");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Error generating competitive analysis");
+      alert(err.message || "Error generating competitive analysis");
       setLoading(false);
     }
   };
