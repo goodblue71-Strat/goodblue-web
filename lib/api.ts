@@ -24,6 +24,7 @@ export async function generateSWOT({
   
   return await response.json();
 }
+
 export async function generateAnsoff({
   company,
   product,
@@ -50,6 +51,7 @@ export async function generateAnsoff({
   
   return await response.json();
 }
+
 export async function generateTAM({
   company,
   product,
@@ -98,6 +100,7 @@ export async function generateTAM({
 
   return await response.json();
 }
+
 export async function generatePorter({
   company,
   product,
@@ -121,6 +124,7 @@ export async function generatePorter({
   if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
   return await response.json();
 }
+
 export async function generateMekko({
   market,
   product,
@@ -271,7 +275,6 @@ export async function generateFiveBox({
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  // If no custom prompt, build one that incorporates the need/problem context
   let finalPrompt = prompt;
   if (!prompt && customContext) {
     finalPrompt = `The customer problem/need is: ${customContext}. Build a 5-box strategy that addresses this need with clear ambition, where-to-play choices, and how-to-win differentiation.`;
