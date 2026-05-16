@@ -174,7 +174,6 @@ export async function generateCompetitiveAnalysis({
 }) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
-  // Use FormData to send both text fields and files
   const formData = new FormData();
   formData.append("company", company);
   formData.append("market", market);
@@ -183,12 +182,39 @@ export async function generateCompetitiveAnalysis({
   if (goal) formData.append("goal", goal);
   if (prompt) formData.append("prompt", prompt);
 
-  // Append each file
   if (files && files.length > 0) {
     files.forEach((file) => {
       formData.append("files", file);
     });
   }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 360000); // 6 minutes
+
+  try {
+    const response = await fetch(`${API_BASE}/app/comp`, {
+      method: "POST",
+      body: formData,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === "AbortError") {
+      throw new Error(
+        "Analysis is taking longer than expected. Please try again."
+      );
+    }
+    throw error;
+  }
+}
+
 
   const response = await fetch(`${API_BASE}/app/comp`, {
     method: "POST",
