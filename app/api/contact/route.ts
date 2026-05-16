@@ -1,25 +1,22 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+
 export const runtime = "nodejs";
 
-export async function POST(req: Request) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  // rest of handler
-}
-
-// (Optional) tiny helper to keep payloads tidy
 function clean(s: unknown) {
   return String(s ?? "").toString().slice(0, 5000).trim();
 }
 
 export async function POST(req: Request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
     const { name, email, message, honeypot } = await req.json();
 
-    // basic validation + simple anti-bot (honeypot)
     if (honeypot) {
-      return NextResponse.json({ ok: true }); // silently ignore bots
+      return NextResponse.json({ ok: true });
     }
+
     const _name = clean(name);
     const _email = clean(email);
     const _message = clean(message);
@@ -28,8 +25,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const from = process.env.CONTACT_FROM_EMAIL || "GoodBlue <noreply@gooblue.ai>";
-    const to = process.env.CONTACT_TO_EMAIL || "hello@gooblue.ai";
+    const from = process.env.CONTACT_FROM_EMAIL || "GoodBlue <noreply@goodblue.ai>";
+    const to = process.env.CONTACT_TO_EMAIL || "hello@goodblue.ai";
 
     await resend.emails.send({
       from,
