@@ -215,18 +215,6 @@ export async function generateCompetitiveAnalysis({
   }
 }
 
-
-  const response = await fetch(`${API_BASE}/app/comp`, {
-    method: "POST",
-    // Note: Do NOT set Content-Type header - browser sets it automatically with boundary
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-}
-
 export async function generateBlueOcean({
   company,
   industry,
